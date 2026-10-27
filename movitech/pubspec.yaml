@@ -1,0 +1,33 @@
+name: jimmy
+description: "Movitech - interní chat pro 6 lidí"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  cloud_firestore: ^7.1.0
+  diacritic: ^0.1.6
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
+  firebase_messaging: ^17.0.1
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_cache_manager: ^3.4.5
+  flutter_riverpod: ^3.4.3
+  go_router: ^18.1.1
+  google_sign_in: ^7.2.0
+  http: ^1.6.0
+  image_picker: ^1.2.4
+  intl: ^0.20.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

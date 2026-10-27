@@ -1,0 +1,7 @@
+{
+  "DEMO": "false",
+  "GOOGLE_WEB_CLIENT_ID": "VLOZTE-WEB-CLIENT-ID.apps.googleusercontent.com",
+  "PHOTO_GATEWAY_URL": "https://script.google.com/macros/s/VLOZTE-ID-NASAZENI/exec",
+  "ENABLE_PUSH": "false",
+  "EXCLUSIVE_REACTIONS": "false"
+}

@@ -1,0 +1,11 @@
+{
+  "rooms": [
+    { "id": "movitech", "name": "Movitech", "emoji": "🏢" },
+    { "id": "velke-nakladky", "name": "Velké nakládky", "emoji": "🚛" },
+    { "id": "napady", "name": "Nápady", "emoji": "💡" }
+  ],
+  "allowlist": [
+    { "email": "jmeno1@gmail.com", "displayName": "Jméno 1" },
+    { "email": "jmeno2@gmail.com", "displayName": "Jméno 2" }
+  ]
+}
