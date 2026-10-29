@@ -288,7 +288,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick.first i { transform: none; }
 .tick.last i { transform: translateX(-100%); }
 .lead { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; }
-.cuts { flex: none; white-space: nowrap; font: 700 15px/22px var(--display); font-variant-numeric: tabular-nums; padding-left: 16px; border-left: 2px solid var(--ink-soft); }
+.cuts { flex: none; white-space: nowrap; font: 700 24px/1.15 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; padding-left: 16px; border-left: 2px solid var(--ink-soft); }
 /* když se výčet nářezů nevejde vedle násobku, jde celý na druhý řádek pod něj */
 .pat.cuts-low .pat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: end; }
 .pat.cuts-low .kpi:not(.right), .pat.cuts-low .lead { display: contents; }
@@ -297,7 +297,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .pat.cuts-low .cuts { grid-column: 1 / -1; grid-row: 2; white-space: normal; overflow-wrap: anywhere; padding-left: 0; border-left: 0; }
 @media (max-width: 600px) {
   .pat { padding: 10px 22px 12px 12px; }
-  .val { font-size: 20px; }
+  .val, .cuts { font-size: 20px; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 34px; }
 }
