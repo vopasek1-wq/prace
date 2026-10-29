@@ -256,8 +256,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
 .plan { display: grid; gap: 6px; }
 .plan > h2 { margin-bottom: 2px; }
-.results .info { margin: 2px 0 6px; font-size: 17px; line-height: 1.45; color: var(--ink); }
-.results .info b { color: var(--info-ink); }
+.results .info { margin: 0 0 -10px; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .pat {
   padding: 8px 24px 8px 12px;
   background: var(--sheet);
@@ -732,7 +731,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
 
     // informace nad souhrnem
     var info = el("p", "info");
-    info.append(el("b", null, "Informace"), document.createTextNode(" Každá trubka je v kalkulaci využita s ohledem na co nejnižší prořez a zbytkový odpad. Prořez je " + fmt(kerf) + " mm a tolerance ±5 mm."));
+    info.append(document.createTextNode("Každá trubka je v kalkulaci využita s ohledem na co nejnižší prořez a zbytkový odpad. Prořez je " + fmt(kerf) + " mm a tolerance ±5 mm."));
     resultsEl.append(info);
 
     // odpověď a souhrn
