@@ -230,7 +230,9 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .results h2 { font-size: 24px; font-weight: 800; letter-spacing: -.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
 .plan > h2, .overview > h2 { position: relative; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
-.pat { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 0 20px; padding-block: 20px 22px; border-bottom: 1px solid var(--rule); }
+.plan { display: grid; gap: 14px; }
+.plan > h2 { margin-bottom: 4px; }
+.pat { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 0 20px; padding: 20px 24px 22px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; box-shadow: 0 1px 0 var(--rule); }
 .mult { font: 800 46px/1 var(--display); letter-spacing: -.04em; padding-top: 2px; }
 .pat-body { min-width: 0; display: grid; gap: 0; }
 .pat-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 20px; }
@@ -268,7 +270,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick.last i { transform: translateX(-100%); }
 .cuts { margin-top: 8px; font: 500 15px/1.5 var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 @media (max-width: 600px) {
-  .pat { grid-template-columns: 56px minmax(0, 1fr); gap: 0 12px; }
+  .pat { grid-template-columns: 56px minmax(0, 1fr); gap: 0 12px; padding: 16px 14px 18px; }
   .mult { font-size: 32px; }
   .bar { height: 44px; }
 }
