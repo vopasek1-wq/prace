@@ -23,6 +23,9 @@
   --signal-edge: #2fa6c0;
   --bar: #2f9fba;
   --teal: #2a7488;
+  --info-bg: #e7f2f6;
+  --info-line: #5ea4b9;
+  --info-ink: #2a6a7f;
   --on-signal: #1e2226;
   --danger: #e03363;
   --hatch: rgba(30, 34, 38, .16);
@@ -43,6 +46,9 @@
     --signal-edge: #3a97ab;
     --bar: #70cfe3;
     --teal: #70cfe3;
+    --info-bg: #1b2e35;
+    --info-line: #3a97ab;
+    --info-ink: #70cfe3;
     --danger: #f2708f;
     --hatch: rgba(236, 238, 240, .20);
     --tube-hi: #b3bdc3;
@@ -60,6 +66,9 @@
   --signal-edge: #3a97ab;
   --bar: #70cfe3;
   --teal: #70cfe3;
+  --info-bg: #1b2e35;
+  --info-line: #3a97ab;
+  --info-ink: #70cfe3;
   --danger: #f2708f;
   --hatch: rgba(236, 238, 240, .20);
   --tube-hi: #b3bdc3;
@@ -97,8 +106,8 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   padding-top: 18px;
   container-type: inline-size;
 }
-.masthead .title { grid-area: title; min-width: 0; }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
+.masthead .title { grid-area: title; min-width: 0; padding: 12px 18px 14px; background: var(--info-bg); border: 1px solid var(--info-line); }
+.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 580px) / 8.4), 80px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; color: var(--info-ink); }
 .masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
