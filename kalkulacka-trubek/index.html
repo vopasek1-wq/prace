@@ -23,9 +23,6 @@
   --signal-edge: #2fa6c0;
   --bar: #2f9fba;
   --teal: #2a7488;
-  --info-bg: #e7f2f6;
-  --info-line: #5ea4b9;
-  --info-ink: #2a6a7f;
   --on-signal: #1e2226;
   --danger: #e03363;
   --hatch: rgba(30, 34, 38, .16);
@@ -46,9 +43,6 @@
     --signal-edge: #3a97ab;
     --bar: #70cfe3;
     --teal: #70cfe3;
-    --info-bg: #1b2e35;
-    --info-line: #3a97ab;
-    --info-ink: #70cfe3;
     --danger: #f2708f;
     --hatch: rgba(236, 238, 240, .20);
     --tube-hi: #b3bdc3;
@@ -66,9 +60,6 @@
   --signal-edge: #3a97ab;
   --bar: #70cfe3;
   --teal: #70cfe3;
-  --info-bg: #1b2e35;
-  --info-line: #3a97ab;
-  --info-ink: #70cfe3;
   --danger: #f2708f;
   --hatch: rgba(236, 238, 240, .20);
   --tube-hi: #b3bdc3;
@@ -106,8 +97,8 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   padding-top: 18px;
   container-type: inline-size;
 }
-.masthead .title { grid-area: title; min-width: 0; padding: 12px 18px 14px; background: var(--info-bg); border: 1px solid var(--info-line); }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 580px) / 8.4), 80px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; color: var(--info-ink); }
+.masthead .title { grid-area: title; min-width: 0; }
+.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
 .masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
@@ -212,7 +203,7 @@ button {
 }
 button:hover { border-color: var(--ink); }
 button.icon { padding: 0; width: 34px; height: 36px; font-size: 18px; line-height: 1; color: var(--ink-soft); }
-button.icon:hover { color: var(--danger); border-color: var(--danger); }
+button.icon:hover { color: var(--paper); background: var(--danger); border-color: var(--danger); }
 button.primary {
   width: 100%; min-height: 42px;
   background: var(--signal); color: var(--on-signal);
@@ -253,8 +244,9 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
   border: 1px solid var(--rule);
   border-left: 4px solid var(--bar);
 }
+.pat { min-width: 0; }
 .pat-body { min-width: 0; display: grid; gap: 0; }
-.pat-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 6px 16px; }
+.pat-head { min-width: 0; display: flex; justify-content: space-between; align-items: flex-end; gap: 6px 16px; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .kpi { display: grid; gap: 2px; min-width: 0; }
 .kpi.right { text-align: right; flex: none; }
@@ -287,11 +279,16 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick.first i { transform: none; }
 .tick.last i { transform: translateX(-100%); }
 .lead { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; }
-.cuts { font: 700 15px/22px var(--display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; padding-left: 16px; border-left: 2px solid var(--ink-soft); }
+.cuts { flex: none; white-space: nowrap; font: 700 15px/22px var(--display); font-variant-numeric: tabular-nums; padding-left: 16px; border-left: 2px solid var(--ink-soft); }
+/* když se výčet nářezů nevejde vedle násobku, jde celý na druhý řádek pod něj */
+.pat.cuts-low .pat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: end; }
+.pat.cuts-low .kpi:not(.right), .pat.cuts-low .lead { display: contents; }
+.pat.cuts-low .lead .val { grid-column: 1; grid-row: 1; }
+.pat.cuts-low .kpi.right { grid-column: 2; grid-row: 1; }
+.pat.cuts-low .cuts { grid-column: 1 / -1; grid-row: 2; white-space: normal; overflow-wrap: anywhere; padding-left: 0; border-left: 0; }
 @media (max-width: 600px) {
   .pat { padding: 10px 22px 12px 12px; }
   .val { font-size: 20px; }
-  .cuts { padding-left: 0; border-left: 0; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 34px; }
 }
@@ -787,6 +784,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       from = to + 1;
     });
     resultsEl.append(plan);
+    layoutCuts();
     layoutKerfLabels();
     layoutSegLabels();
 
@@ -984,6 +982,18 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       });
     });
   }
+  // Výčet nářezů vedle násobku; když se nevejde, jde na druhý řádek pod něj
+  function layoutCuts() {
+    Array.prototype.forEach.call(document.querySelectorAll(".pat"), function (card) {
+      card.classList.remove("cuts-low");
+      var head = card.querySelector(".pat-head");
+      var lead = card.querySelector(".lead");
+      var avail = head.clientWidth - head.lastChild.offsetWidth - 16;
+      var need = lead.firstChild.offsetWidth + 16 + lead.lastChild.offsetWidth;
+      if (need > avail) card.classList.add("cuts-low");
+    });
+  }
+
   // Délka nebo slovo „odřezek“ se v pruhu ukáže jen tam, kde se vejde
   function layoutSegLabels() {
     Array.prototype.forEach.call(document.querySelectorAll(".seg > .lbl"), function (l) {
@@ -991,7 +1001,9 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     });
   }
   var resizeTimer;
-  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { layoutKerfLabels(); layoutSegLabels(); }, 100); });
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { layoutCuts(); layoutKerfLabels(); layoutSegLabels(); }, 100); });
+  // po načtení písma se šířky textu změní, rozložení se přepočítá
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layoutCuts(); layoutKerfLabels(); layoutSegLabels(); });
 
   // prázdný stav: náznak pruhu trubky a tlačítko s ukázkovým zadáním
   function showEmpty() {
