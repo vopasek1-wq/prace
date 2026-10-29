@@ -250,6 +250,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .answer { background: var(--signal); color: var(--on-signal); border-radius: 0; padding: 10px 14px 12px; display: grid; gap: 2px; align-content: space-between; }
 .answer .label { color: var(--on-signal); font-size: 13px; }
 .answer .big { font: 700 clamp(46px, 7vw, 68px)/.85 var(--display); letter-spacing: -.03em; padding-top: 6px; }
+.answer .pieces { font-size: 15px; font-weight: 700; padding-top: 6px; }
 .answer .big small { font: 700 clamp(15px, 1.9vw, 19px) var(--display); letter-spacing: 0; margin-left: 4px; }
 
 .masthead .note { grid-area: note; margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
@@ -442,7 +443,6 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
       <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
       <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
       <div><dt>Délka</dt><dd>6 000 mm</dd></div>
-      <div id="specPiecesCell" hidden><dt>Požadované kusy</dt><dd id="specPieces"></dd></div>
     </dl>
       </div>
       <section class="results" id="results" aria-live="polite"></section>
@@ -740,9 +740,8 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
     var big = el("b", "big", String(bars.length));
     big.append(el("small", null, "ks"));
     answer.append(big);
+    answer.append(el("span", "pieces", "Požadované kusy: " + totalPieces + " ks"));
     document.getElementById("toprow").classList.add("has-answer");
-    document.getElementById("specPieces").textContent = totalPieces + " ks";
-    document.getElementById("specPiecesCell").hidden = false;
 
     // plán řezání
     var plan = el("section", "plan");
@@ -1041,7 +1040,6 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
     resultsEl.innerHTML = "";
     document.getElementById("answer").innerHTML = "";
     document.getElementById("toprow").classList.remove("has-answer");
-    document.getElementById("specPiecesCell").hidden = true;
     var box = el("div", "empty");
     var hd = el("div", "hd");
     hd.append(el("strong", null, "Zatím žádný výpočet"));
