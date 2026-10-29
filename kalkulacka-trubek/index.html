@@ -86,14 +86,14 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 /* Záhlaví: název, výkres trubky (bokorys a průřez) a parametry jako popisek na výkresu */
 .masthead {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 500px);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 620px);
   grid-template-areas: "title fig" "spec spec";
   gap: 24px 32px;
   align-items: end;
   padding-top: 32px;
 }
 .masthead .title { grid-area: title; min-width: 0; }
-.masthead h1 { font-weight: 800; font-size: clamp(40px, 6.4vw, 80px); line-height: .94; letter-spacing: -.035em; }
+.masthead h1 { font-weight: 800; font-size: clamp(40px, 5.6vw, 72px); line-height: .94; letter-spacing: -.035em; }
 .masthead p { margin: 14px 0 0; font-size: clamp(16px, 1.6vw, 20px); color: var(--ink-soft); max-width: 46ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
@@ -323,9 +323,9 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
   <header class="masthead">
     <div class="title">
       <h1>Kalkulace trubek</h1>
-      <p id="subtitle">Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm</p>
+      <p id="subtitle">Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm</p>
     </div>
-    <svg class="drawing" id="cross" viewBox="0 0 560 190" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
+    <svg class="drawing" id="cross" viewBox="0 0 600 190" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
       <defs>
         <linearGradient id="gSide" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" style="stop-color:var(--tube-lo)"/>
@@ -338,20 +338,22 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
         </linearGradient>
       </defs>
       <!-- osy -->
-      <path d="M4 92H552M486 20V164" fill="none" style="stroke:var(--ink-soft)" stroke-width="1" stroke-dasharray="12 3 2 3"/>
-      <!-- bokorys: trubka s přerušením uprostřed, výška odpovídá průměru -->
-      <polygon points="10,42 160,42 148,142 10,142" fill="url(#gSide)" style="stroke:var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
-      <polygon points="180,42 350,42 350,142 168,142" fill="url(#gSide)" style="stroke:var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M4 92H596M540 20V164" fill="none" style="stroke:var(--ink-soft)" stroke-width="1" stroke-dasharray="12 3 2 3"/>
+      <!-- bokorys: celá trubka, výška odpovídá průměru, vlevo otevřený konec -->
+      <path d="M14 42H470A8 50 0 0 1 470 142H14Z" fill="url(#gSide)" style="stroke:var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+      <ellipse cx="14" cy="92" rx="8" ry="50" style="fill:var(--tube-lo);stroke:var(--ink)" stroke-width="1.4"/>
+      <ellipse cx="14" cy="92" rx="4.6" ry="41.6" style="fill:var(--paper);stroke:var(--ink)" stroke-width="1"/>
+      <path d="M6 92H470" fill="none" style="stroke:var(--ink-soft)" stroke-width="1" stroke-dasharray="12 3 2 3"/>
       <!-- kóta délky -->
-      <path d="M10 148V176M350 148V176" fill="none" style="stroke:var(--ink)" stroke-width="1"/>
-      <path d="M14 168H122M238 168H346" fill="none" style="stroke:var(--ink)" stroke-width="1.2"/>
-      <path d="M10 168l9-3.5v7zM350 168l-9-3.5v7z" style="fill:var(--ink)"/>
-      <text x="180" y="173" text-anchor="middle" style="fill:var(--ink)" font-family="JetBrains Mono, monospace" font-weight="700" font-size="19">6 000 mm</text>
+      <path d="M6 148V176M478 148V176" fill="none" style="stroke:var(--ink)" stroke-width="1"/>
+      <path d="M10 168H190M298 168H474" fill="none" style="stroke:var(--ink)" stroke-width="1.2"/>
+      <path d="M6 168l9-3.5v7zM478 168l-9-3.5v7z" style="fill:var(--ink)"/>
+      <text x="244" y="174" text-anchor="middle" style="fill:var(--ink)" font-family="JetBrains Mono, monospace" font-weight="700" font-size="19">6 000 mm</text>
       <!-- průřez -->
-      <circle id="ringBody" cx="486" cy="92" r="45.8" fill="none" stroke="url(#gRing)" stroke-width="8.4"/>
-      <circle cx="486" cy="92" r="50" fill="none" style="stroke:var(--ink)" stroke-width="1.4"/>
-      <circle id="ringHole" cx="486" cy="92" r="41.6" fill="none" style="stroke:var(--ink)" stroke-width="1.4"/>
-      <text x="486" y="173" text-anchor="middle" style="fill:var(--ink)" font-family="JetBrains Mono, monospace" font-weight="700" font-size="19">Ø 48,3</text>
+      <circle id="ringBody" cx="540" cy="92" r="45.8" fill="none" stroke="url(#gRing)" stroke-width="8.4"/>
+      <circle cx="540" cy="92" r="50" fill="none" style="stroke:var(--ink)" stroke-width="1.4"/>
+      <circle id="ringHole" cx="540" cy="92" r="41.6" fill="none" style="stroke:var(--ink)" stroke-width="1.4"/>
+      <text x="540" y="174" text-anchor="middle" style="fill:var(--ink)" font-family="JetBrains Mono, monospace" font-weight="700" font-size="19">Ø 48,3</text>
     </svg>
     <dl class="spec" aria-label="Parametry trubky">
       <div><dt>Materiál</dt><dd id="specMat">Ocel</dd></div>
@@ -901,8 +903,8 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
   });
   function matDesc() {
     return document.getElementById("matAlu").checked
-      ? "Hliníkové trubky nařežeme na míru z originální délky 6000 mm"
-      : "Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm";
+      ? "Hliníkové trubky nařežeme na míru z originální délky 6000 mm"
+      : "Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm";
   }
   // záhlaví: popis, parametry a průřez trubky podle zvoleného materiálu
   function updateSubtitle() {
