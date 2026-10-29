@@ -29,6 +29,7 @@
   --on-signal: #1e2226;
   --danger: #dc3030;
   --hatch: rgba(30, 34, 38, .16);
+  --hatch-strong: rgba(30, 34, 38, .55);
   --tube-hi: #dfe4e8;
   --tube-lo: #6b7882;
   --display: "Open Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -51,6 +52,7 @@
     --info-rule: #2b4a55;
     --danger: #f26b66;
     --hatch: rgba(236, 238, 240, .20);
+    --hatch-strong: rgba(236, 238, 240, .6);
     --tube-hi: #b3bdc3;
     --tube-lo: #4f5e68;
   }
@@ -71,6 +73,7 @@
   --info-rule: #2b4a55;
   --danger: #f26b66;
   --hatch: rgba(236, 238, 240, .20);
+  --hatch-strong: rgba(236, 238, 240, .6);
   --tube-hi: #b3bdc3;
   --tube-lo: #4f5e68;
 }
@@ -294,7 +297,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .seg.rest-seg > .lbl { font: 400 12px var(--display); color: var(--ink-soft); background: var(--sheet); padding: 1px 6px; }
 .kerf { position: relative; }
 .kerf::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; transform: translateX(-50%); background: var(--sheet); z-index: 1; }
-.seg.rest-seg { background: repeating-linear-gradient(135deg, var(--hatch) 0 2px, transparent 2px 8px), var(--sheet); }
+.seg.rest-seg { background: repeating-linear-gradient(135deg, var(--hatch-strong) 0 3px, transparent 3px 8px), var(--sheet); }
 .ruler { position: relative; height: 18px; border-top: 1px solid var(--ink-soft); margin-top: 2px; }
 .tick { position: absolute; top: 0; width: 1px; height: 5px; background: var(--ink-soft); }
 .tick.major { height: 7px; }
@@ -349,7 +352,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
   :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
     color-scheme: light;
     --paper: #fff; --sheet: #fff; --ink: #111; --ink-soft: #444; --rule: #ccc;
-    --hatch: rgba(0, 0, 0, .18); --tube-hi: #c3cac7; --tube-lo: #68726e;
+    --hatch: rgba(0, 0, 0, .18); --hatch-strong: rgba(0, 0, 0, .55); --tube-hi: #c3cac7; --tube-lo: #68726e;
     --info-bg: #eef6f9; --info-line: #5ea4b9; --info-rule: #c6dfe7;
   }
   .page { max-width: none; padding-inline: 0; padding-block: 0; }
