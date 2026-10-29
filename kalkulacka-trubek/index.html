@@ -99,15 +99,15 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 /* Záhlaví: název, výkres trubky (bokorys a průřez) a parametry jako popisek na výkresu */
 .masthead {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 500px);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 560px);
   grid-template-areas: "title fig" "spec spec";
-  gap: 14px 28px;
+  gap: 14px 20px;
   align-items: stretch;
   padding-top: 18px;
   container-type: inline-size;
 }
 .masthead .title { grid-area: title; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; margin-top: .11em; }
+.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 600px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; margin-top: .11em; }
 .masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
@@ -131,10 +131,6 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .spec > .has-link:hover { background: var(--info-rule); }
 .spec > .has-link:focus-within { outline: 3px solid var(--ink); outline-offset: -3px; }
 .spec-link:focus-visible { outline: 0; }
-.spec > .has-link.plain:hover { background: var(--info-bg); }
-.has-link.plain .spec-link { text-decoration: none; color: inherit; cursor: default; }
-.has-link.plain .spec-link::after { pointer-events: none; }
-.has-link.plain .ext, .has-link.plain .link-hint { display: none; }
 .spec dt { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .spec dd { margin: 2px 0 0; font: 700 14px/1.25 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 800px) {
@@ -458,7 +454,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
   var STOCK = 6000; // délka trubky v mm, pevně daná
   var OUTER_D = 48.3; // vnější průměr trubky v mm
   var WALL_STEEL = 4.05, WALL_ALU = 4.0; // tloušťka stěny v mm
-  var MATERIAL_URL = "https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm";
+  var MATERIAL_URL = { steel: "https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm", alu: "https://www.movitech.cz/lesenarska-trubka-hlinikova-o-48-3-mm-delka-6m" };
   var EXAMPLE = [[3740, 10], [2465, 12], [860, 23]]; // [délka, počet]
 
   var rowsEl = document.getElementById("rows");
@@ -971,12 +967,8 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     var wallText = wall.toLocaleString("cs-CZ", { minimumFractionDigits: 2 });
     document.getElementById("subtitle").textContent = matDesc();
     document.getElementById("specMat").textContent = alu ? "Hliník" : "Ocel";
-    // odkaz na produkt je jen u oceli, k hliníku odpovídající stránka na webu není
-    var link = document.getElementById("specMatLink");
-    link.parentNode.parentNode.classList.toggle("plain", alu);
-    if (alu) { link.removeAttribute("href"); link.removeAttribute("title"); }
-    else { link.setAttribute("href", MATERIAL_URL); link.setAttribute("title", "Zobrazit tuto trubku na movitech.cz"); }
-    document.getElementById("specWall").textContent = wallText + " mm";
+    // odkaz na stránku zvolené trubky na movitech.cz
+    document.getElementById("specMatLink").setAttribute("href", MATERIAL_URL[alu ? "alu" : "steel"]);
     document.body.setAttribute("data-mat", alu ? "alu" : "steel");
     var k = 50 / (OUTER_D / 2); // průřez je nakreslený v měřítku, vnější poloměr 50
     var w = wall * k;
