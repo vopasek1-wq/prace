@@ -752,7 +752,8 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       var lead = el("div", "lead");
       lead.append(el("b", "val", g.count + "×"), el("span", "sep"));
       var parts = piecesParts(g.pieces);
-      parts.forEach(function (t, i) { lead.append(el("span", "cut", t + (i < parts.length - 1 ? " |" : ""))); });
+      // pevné mezery: „3 ks 1 780 mm“ se nikdy nerozdělí na dva řádky
+      parts.forEach(function (t, i) { lead.append(el("span", "cut", (t + (i < parts.length - 1 ? " |" : "")).replace(/ /g, "\u00a0"))); });
       count.append(lead);
       var rest = el("div", "kpi right");
       rest.append(el("span", "lab", "Odřezek"), el("b", "val", fmt(g.rest) + " mm"));
