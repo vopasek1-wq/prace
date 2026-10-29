@@ -117,6 +117,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   gap: 1px;
   background: var(--info-rule);
   border: 1px solid var(--info-line);
+  border-left: 4px solid var(--bar);
   border-radius: 0;
   overflow: hidden;
 }
@@ -152,8 +153,8 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 @media (max-width: 900px) { .workspace { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 
 /* Zadání */
-.panel { background: var(--sheet); border: 1px solid var(--rule); border-left: 4px solid var(--bar); border-radius: 0; padding: 14px; display: grid; gap: 12px; }
-.panel h2 { font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.panel { background: var(--sheet); border: 1px solid var(--info-line); border-left: 4px solid var(--bar); border-radius: 0; padding: 14px; display: grid; gap: 12px; }
+.panel h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
 .label { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .fields { display: grid; }
 .seg-choice { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 8px; }
@@ -245,21 +246,19 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .answer .label { color: var(--on-signal); font-size: 13px; }
 .answer .big { font: 700 clamp(46px, 7vw, 68px)/.85 var(--display); letter-spacing: -.03em; padding-top: 6px; }
 .answer .big small { font: 700 clamp(15px, 1.9vw, 19px) var(--display); letter-spacing: 0; margin-left: 4px; }
-.facts { margin: 0; display: grid; align-content: stretch; border-top: 2px solid var(--ink); }
-.facts > div { display: flex; flex-direction: column; justify-content: center; gap: 0; padding: 6px 2px; border-bottom: 1px solid var(--rule); }
+.facts { margin: 0; display: grid; align-content: stretch; padding: 0 14px; background: var(--sheet); border: 1px solid var(--info-line); border-left: 4px solid var(--bar); }
+.facts > div { display: flex; flex-direction: column; justify-content: center; gap: 0; padding: 6px 2px; border-bottom: 1px solid var(--info-rule); }
+.facts > div:last-child { border-bottom: 0; }
 .facts dt { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
 .facts dd { margin: 0; font: 700 clamp(17px, 2vw, 21px)/1.1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 
 .masthead .note { grid-area: note; margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .results h2 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
-.plan > h2, .overview > h2 { position: relative; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
-.plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
 .plan { display: grid; gap: 6px; }
-.plan > h2 { margin-bottom: 2px; }
 .pat {
   padding: 8px 24px 8px 12px;
   background: var(--sheet);
-  border: 1px solid var(--rule);
+  border: 1px solid var(--info-line);
   border-left: 4px solid var(--bar);
 }
 .pat { min-width: 0; }
@@ -317,9 +316,9 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 }
 
 /* Přehled délek */
-.tablewrap { overflow-x: auto; }
+.tablewrap { overflow-x: auto; background: var(--sheet); border: 1px solid var(--info-line); border-left: 4px solid var(--bar); }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 6px 10px; border-bottom: 1px solid var(--rule); text-align: left; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--info-rule); text-align: left; }
 th { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 td.n, th.n { text-align: right; }
 td.n, .overview td.mono { white-space: nowrap; }
@@ -327,7 +326,7 @@ td.n, .overview td.mono { white-space: nowrap; }
 .overview .c-qty { width: 22%; }
 .overview .sw { display: inline-block; vertical-align: -3px; margin-right: 8px; width: 8px; height: 16px; border-radius: 0; }
 tfoot td { font-weight: 700; border-bottom: 0; }
-tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font: 700 12px var(--display); color: var(--ink-soft); }
+tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0; font: 700 12px var(--display); color: var(--ink-soft); }
 @media (max-width: 600px) { .overview .c-qty { width: auto; } th, td { padding: 6px 4px; } }
 
 .out-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
@@ -335,7 +334,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
 .out-actions button.primary { width: auto; font-size: 13px; padding: 0 24px; }
 
 /* Prázdný stav ukazuje, jak bude výsledek vypadat */
-.empty { border: 1px dashed var(--ink-soft); border-radius: 0; padding: 18px clamp(14px, 2vw, 22px) 20px; display: grid; gap: 14px; }
+.empty { background: var(--sheet); border: 1px solid var(--info-line); border-left: 4px solid var(--bar); border-radius: 0; padding: 18px clamp(14px, 2vw, 22px) 20px; display: grid; gap: 14px; }
 .empty .hd { display: grid; gap: 6px; }
 .empty strong { font: 700 21px/1.15 var(--display); letter-spacing: -.015em; }
 .empty .hd span { color: var(--ink-soft); max-width: 52ch; }
