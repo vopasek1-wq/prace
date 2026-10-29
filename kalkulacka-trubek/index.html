@@ -256,6 +256,8 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
 .plan { display: grid; gap: 6px; }
 .plan > h2 { margin-bottom: 2px; }
+.plan .info { margin: 4px 0 2px; font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+.plan .info b { color: var(--ink); }
 .pat {
   padding: 8px 24px 8px 12px;
   background: var(--sheet);
@@ -747,9 +749,10 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
 
     // plán řezání
     var plan = el("section", "plan");
-    var ph = el("h2", null, "Plán řezání ");
-    ph.append(el("span", "h2-note", "(stejné nářezy jsou sloučené, pruh odpovídá trubce o délce " + fmt(stock) + " mm, prořez je " + fmt(kerf) + " mm)"));
-    plan.append(ph);
+    plan.append(el("h2", null, "Plán řezání"));
+    var info = el("p", "info");
+    info.append(el("b", null, "Informace"), document.createTextNode(" Každá trubka je v kalkulaci využita s ohledem na co nejnižší prořez a zbytkový odpad. Prořez je " + fmt(kerf) + " mm a tolerance ±5 mm."));
+    plan.append(info);
     var from = 1;
     groups.forEach(function (g) {
       var to = from + g.count - 1;
