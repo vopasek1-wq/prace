@@ -21,6 +21,8 @@
   --signal: #70cfe3;
   --signal-hover: #5cc3d9;
   --signal-edge: #2fa6c0;
+  --bar: #2f9fba;
+  --teal: #2a7488;
   --on-signal: #1e2226;
   --danger: #e03363;
   --hatch: rgba(30, 34, 38, .16);
@@ -39,6 +41,8 @@
     --rule: #323c46;
     --signal-hover: #8adaeb;
     --signal-edge: #3a97ab;
+    --bar: #70cfe3;
+    --teal: #70cfe3;
     --danger: #f2708f;
     --hatch: rgba(236, 238, 240, .20);
     --tube-hi: #b3bdc3;
@@ -54,6 +58,8 @@
   --rule: #323c46;
   --signal-hover: #8adaeb;
   --signal-edge: #3a97ab;
+  --bar: #70cfe3;
+  --teal: #70cfe3;
   --danger: #f2708f;
   --hatch: rgba(236, 238, 240, .20);
   --tube-hi: #b3bdc3;
@@ -232,18 +238,18 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
 .plan { display: grid; gap: 8px; }
 .plan > h2 { margin-bottom: 2px; }
-.pat { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 0 16px; padding: 12px 16px 12px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 0; box-shadow: 0 1px 0 var(--rule); }
-.mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
+.pat {
+  padding: 12px 18px 14px 16px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--bar);
+}
 .pat-body { min-width: 0; display: grid; gap: 0; }
-.pat-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 20px; }
-.pat-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
-.pat-title h3 { font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
-.pat-title span { color: var(--ink-soft); font-size: 12px; }
-.rest { display: flex; align-items: baseline; gap: 8px; }
-.rest small { color: var(--ink-soft); font-size: 12px; font-weight: 700; }
-.rest b { font: 700 13px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-
-/* Trubka v měřítku: délka pruhu odpovídá 6 000 mm, popisky prořezu nahoře, pravítko dole */
+.pat-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 6px 20px; }
+.kpi { display: grid; gap: 2px; min-width: 0; }
+.kpi.right { text-align: right; }
+.lab { margin: 0; font: 700 12px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+.val { font: 700 24px/1.15 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 .tube { margin-top: 2px; }
 .cutlabels { position: relative; height: 20px; }
 .cutlabel { position: absolute; bottom: 6px; transform: translateX(-50%); font: 700 12px/1 var(--mono); color: var(--ink-soft); white-space: nowrap; }
@@ -270,7 +276,8 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick.last i { transform: translateX(-100%); }
 .cuts { margin-top: 6px; font: 400 13px/1.5 var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 @media (max-width: 600px) {
-  .pat { grid-template-columns: 44px minmax(0, 1fr); gap: 0 10px; padding: 10px 12px 12px; }
+  .pat { padding: 10px 12px 12px 12px; }
+  .val { font-size: 20px; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 34px; }
 }
@@ -710,16 +717,15 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     groups.forEach(function (g) {
       var to = from + g.count - 1;
       var card = el("article", "pat");
-      card.append(el("div", "mult", g.count + "×"));
-
       var body = el("div", "pat-body");
       var head = el("div", "pat-head");
-      var title = el("div", "pat-title");
-      title.append(el("h3", null, g.count === 1 ? "Trubka " + from : "Trubky " + from + "–" + to));
-      title.append(el("span", null, g.pieces.length + (g.pieces.length === 1 ? " kus" : g.pieces.length < 5 ? " kusy" : " kusů") + " z každé trubky"));
-      var rest = el("div", "rest");
-      rest.append(el("small", null, "Odřezek"), el("b", null, fmt(g.rest) + " mm"));
-      head.append(title, rest);
+      var count = el("div", "kpi");
+      var unitsText = g.pieces.length + (g.pieces.length === 1 ? " kus" : g.pieces.length < 5 ? " kusy" : " kusů") + " z každé trubky";
+      count.append(el("h3", "lab", (g.count === 1 ? "Trubka " + from : "Trubky " + from + "–" + to) + " · " + unitsText));
+      count.append(el("b", "val", g.count + "×"));
+      var rest = el("div", "kpi right");
+      rest.append(el("span", "lab", "Odřezek"), el("b", "val", fmt(g.rest) + " mm"));
+      head.append(count, rest);
       body.append(head);
 
       var tube = el("div", "tube");
