@@ -114,7 +114,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   grid-area: spec;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--info-rule);
   border: 1px solid var(--info-line);
@@ -390,7 +390,6 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
       <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
       <div><dt>Délka</dt><dd>6 000 mm</dd></div>
-      <div><dt>Prořez</dt><dd>3 mm</dd></div>
     </dl>
   </header>
 
@@ -733,7 +732,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     // plán řezání
     var plan = el("section", "plan");
     var ph = el("h2", null, "Plán řezání ");
-    ph.append(el("span", "h2-note", "(stejné nářezy jsou sloučené, pruh odpovídá trubce o délce 6 000 mm)"));
+    ph.append(el("span", "h2-note", "(stejné nářezy jsou sloučené, pruh odpovídá trubce o délce " + fmt(stock) + " mm, prořez je " + fmt(kerf) + " mm)"));
     plan.append(ph);
     var from = 1;
     groups.forEach(function (g) {
