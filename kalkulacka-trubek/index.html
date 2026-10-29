@@ -100,7 +100,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .masthead {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 560px);
-  grid-template-areas: "title fig" "spec spec";
+  grid-template-areas: "title fig" "note note" "spec spec";
   gap: 14px 20px;
   align-items: stretch;
   padding-top: 18px;
@@ -133,7 +133,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .spec dt { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .spec dd { margin: 2px 0 0; font: 700 14px/1.25 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 800px) {
-  .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "spec"; }
+  .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "note" "spec"; }
   .masthead h1 { font-size: clamp(28px, 9vw, 56px); }
 }
 @media (max-width: 700px) {
@@ -250,7 +250,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .facts dt { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
 .facts dd { margin: 0; font: 700 clamp(17px, 2vw, 21px)/1.1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 
-.results .info { margin: 0 0 -10px; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
+.masthead .note { grid-area: note; margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .results h2 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
 .plan > h2, .overview > h2 { position: relative; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
@@ -308,7 +308,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 @media (max-width: 600px) {
   .pat { padding: 8px 20px 8px 10px; }
   .val, .cut { font-size: 16px; }
-  .results .info { font-size: 15px; }
+  .masthead .note { font-size: 15px; }
     .pat-head { --badge: 34px; }
   .lead .val { padding: 0 6px; margin-right: 10px; }
   .sep { height: 18px; margin-right: 10px; }
@@ -397,6 +397,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       <circle id="ringHole" cx="540" cy="92" r="41.6" fill="none" style="stroke:var(--ink)" stroke-width="1.4"/>
       <text x="540" y="174" text-anchor="middle" style="fill:var(--ink)" font-family="Open Sans, sans-serif" font-weight="700" font-size="19">Ø 48,3</text>
     </svg>
+    <p class="note" id="note">Ocelové lešenářské trubky řežeme z originální délky 6000 mm s ohledem na minimální prořez a odpad. Prořez činí 3 mm, tolerance ±5 mm.</p>
     <dl class="spec" aria-label="Parametry trubky">
       <div class="has-link"><dt>Materiál</dt><dd><a id="specMatLink" class="spec-link" href="https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm" target="_blank" rel="noopener" title="Zobrazit tuto trubku na movitech.cz"><span id="specMat">Ocel</span><span class="link-hint">Odkaz na produkt<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></a></dd></div>
       <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
@@ -727,10 +728,6 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
 
     updateSubtitle();
 
-    // text nad celkovým počtem trubek, podle zvoleného materiálu
-    var info = el("p", "info", matDesc());
-    resultsEl.append(info);
-
     // odpověď a souhrn
     var verdict = el("section", "verdict");
     var answer = el("div", "answer");
@@ -965,8 +962,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     var alu = document.getElementById("matAlu").checked;
     var wall = alu ? WALL_ALU : WALL_STEEL;
     var wallText = wall.toLocaleString("cs-CZ", { minimumFractionDigits: 2 });
-    var info = document.querySelector(".results .info");
-    if (info) info.textContent = matDesc();
+    document.getElementById("note").textContent = matDesc();
     document.getElementById("specMat").textContent = alu ? "Hliník" : "Ocel";
     // odkaz na stránku zvolené trubky na movitech.cz
     document.getElementById("specMatLink").setAttribute("href", MATERIAL_URL[alu ? "alu" : "steel"]);
