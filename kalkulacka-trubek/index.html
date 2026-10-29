@@ -966,6 +966,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
     var wallText = wall.toLocaleString("cs-CZ", { minimumFractionDigits: 2 });
     document.getElementById("note").textContent = matDesc();
     document.getElementById("specMat").textContent = alu ? "Hliník" : "Ocel";
+    document.getElementById("specWall").textContent = wallText + "\u00a0mm";
     // odkaz na stránku zvolené trubky na movitech.cz
     document.getElementById("specMatLink").setAttribute("href", MATERIAL_URL[alu ? "alu" : "steel"]);
     document.body.setAttribute("data-mat", alu ? "alu" : "steel");
