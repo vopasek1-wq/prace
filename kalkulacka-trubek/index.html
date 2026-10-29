@@ -108,7 +108,6 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 }
 .masthead .title { grid-area: title; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
 .masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 600px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; margin-top: .11em; }
-.masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); font-weight: 700; color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
   grid-area: spec;
@@ -251,12 +250,12 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .facts dt { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
 .facts dd { margin: 0; font: 700 clamp(17px, 2vw, 21px)/1.1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 
+.results .info { margin: 0 0 -10px; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .results h2 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
 .plan > h2, .overview > h2 { position: relative; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
 .plan > h2::after, .overview > h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 3px; background: var(--signal); }
 .plan { display: grid; gap: 6px; }
 .plan > h2 { margin-bottom: 2px; }
-.results .info { margin: 0 0 -10px; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .pat {
   padding: 8px 24px 8px 12px;
   background: var(--sheet);
@@ -310,7 +309,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
   .pat { padding: 8px 20px 8px 10px; }
   .val, .cut { font-size: 16px; }
   .results .info { font-size: 15px; }
-  .pat-head { --badge: 34px; }
+    .pat-head { --badge: 34px; }
   .lead .val { padding: 0 6px; margin-right: 10px; }
   .sep { height: 18px; margin-right: 10px; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
@@ -368,7 +367,6 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
   <header class="masthead">
     <div class="title">
       <h1>Kalkulace trubek</h1>
-      <p id="subtitle">Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm</p>
     </div>
     <svg class="drawing" id="cross" viewBox="0 18 600 166" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
       <defs>
@@ -729,9 +727,8 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
 
     updateSubtitle();
 
-    // informace nad souhrnem
-    var info = el("p", "info");
-    info.append(document.createTextNode("Každá trubka je v kalkulaci využita s ohledem na co nejnižší prořez a zbytkový odpad. Prořez je " + fmt(kerf) + " mm a tolerance ±5 mm."));
+    // text nad celkovým počtem trubek, podle zvoleného materiálu
+    var info = el("p", "info", matDesc());
     resultsEl.append(info);
 
     // odpověď a souhrn
@@ -960,16 +957,16 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     if (calc() === true) revealResults();
   });
   function matDesc() {
-    return document.getElementById("matAlu").checked
-      ? "Hliníkové trubky nařežeme na míru z originální délky 6000 mm"
-      : "Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm";
+    var druh = document.getElementById("matAlu").checked ? "Hliníkové" : "Ocelové lešenářské";
+    return druh + " trubky řežeme z originální délky " + fmt(STOCK).replace(/\s/g, "") + "\u00a0mm s ohledem na minimální prořez a odpad. Prořez činí " + fmt(KERF) + "\u00a0mm, tolerance ±5\u00a0mm.";
   }
   // záhlaví: popis, parametry a průřez trubky podle zvoleného materiálu
   function updateSubtitle() {
     var alu = document.getElementById("matAlu").checked;
     var wall = alu ? WALL_ALU : WALL_STEEL;
     var wallText = wall.toLocaleString("cs-CZ", { minimumFractionDigits: 2 });
-    document.getElementById("subtitle").textContent = matDesc();
+    var info = document.querySelector(".results .info");
+    if (info) info.textContent = matDesc();
     document.getElementById("specMat").textContent = alu ? "Hliník" : "Ocel";
     // odkaz na stránku zvolené trubky na movitech.cz
     document.getElementById("specMatLink").setAttribute("href", MATERIAL_URL[alu ? "alu" : "steel"]);
