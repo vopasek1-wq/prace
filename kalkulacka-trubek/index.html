@@ -255,13 +255,16 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 }
 .pat { min-width: 0; }
 .pat-body { min-width: 0; display: grid; gap: 0; }
-.pat-head { min-width: 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 6px 16px; margin-bottom: 4px; }
+.pat-head { --badge: 40px; display: flow-root; margin-bottom: 4px; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.kpi { display: grid; gap: 2px; min-width: 0; }
-.kpi.right { text-align: right; flex: none; }
+.kpi { display: block; min-width: 0; }
+/* odřezek plave vpravo nahoře, první řádek nářezů je vedle něj, další řádky jdou přes celou šířku karty */
+.kpi.right { float: right; margin-left: 14px; height: var(--badge); display: grid; gap: 0; align-content: start; text-align: right; }
+.kpi.right .lab { line-height: 1.1; }
+.kpi.right .val { line-height: 1.1; }
 .kpi.right .val { font-weight: 400; }
 /* násobek (5×) ve čtverci s modrým pozadím a ohraničením */
-.lead .val { display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; background: var(--info-bg); border: 1px solid var(--info-line); }
+.lead .val { display: inline-grid; place-items: center; vertical-align: middle; min-width: var(--badge); height: var(--badge); padding: 0 8px; margin-right: 12px; background: var(--info-bg); border: 1px solid var(--info-line); }
 .lab { margin: 0; font: 700 11px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
 .val { font: 700 18px/1.15 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 .tube { margin-top: 2px; }
@@ -290,18 +293,15 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick i { position: absolute; top: 8px; left: 0; transform: translateX(-50%); font: 400 11px/1 var(--mono); font-style: normal; color: var(--ink-soft); white-space: nowrap; }
 .tick.first i { transform: none; }
 .tick.last i { transform: translateX(-100%); }
-.lead { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; }
-.cuts { flex: none; white-space: nowrap; font: 700 18px/1.15 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; padding-left: 14px; border-left: 2px solid var(--ink-soft); }
-/* když se výčet nářezů nevejde vedle násobku, jde celý na druhý řádek pod něj */
-.pat.cuts-low .pat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: start; }
-.pat.cuts-low .kpi:not(.right), .pat.cuts-low .lead { display: contents; }
-.pat.cuts-low .lead .val { grid-column: 1; grid-row: 1; justify-self: start; }
-.pat.cuts-low .kpi.right { grid-column: 2; grid-row: 1; }
-.pat.cuts-low .cuts { grid-column: 1 / -1; grid-row: 2; white-space: normal; overflow-wrap: anywhere; padding-left: 0; border-left: 0; }
+.lead { display: block; }
+.sep { display: inline-block; vertical-align: middle; width: 2px; height: 22px; margin-right: 12px; background: var(--ink-soft); }
+.cut { display: inline-block; vertical-align: middle; margin: 0 8px 2px 0; white-space: nowrap; font: 700 18px/1.3 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
   .pat { padding: 8px 20px 8px 10px; }
-  .val, .cuts { font-size: 16px; }
-  .lead .val { min-width: 34px; height: 34px; padding: 0 6px; }
+  .val, .cut { font-size: 16px; }
+  .pat-head { --badge: 34px; }
+  .lead .val { padding: 0 6px; margin-right: 10px; }
+  .sep { height: 18px; margin-right: 10px; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 26px; }
 }
@@ -466,6 +466,9 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     if (text != null) e.textContent = text;
     return e;
   }
+
+  // totéž po částech: ["2 ks 548 mm", "1 ks 440 mm"]
+  function piecesParts(pieces) { return piecesText(pieces).split(" | "); }
 
   // stejné délky sloučí: [548, 548, 440] → "2 ks 548 mm | 1 ks 440 mm"
   function piecesText(pieces) {
@@ -747,11 +750,13 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       var unitsText = g.pieces.length + (g.pieces.length === 1 ? " kus" : g.pieces.length < 5 ? " kusy" : " kusů") + " z každé trubky";
       count.append(el("h3", "sr-only", (g.count === 1 ? "Trubka " + from : "Trubky " + from + "–" + to) + " · " + unitsText));
       var lead = el("div", "lead");
-      lead.append(el("b", "val", g.count + "×"), el("span", "cuts", piecesText(g.pieces)));
+      lead.append(el("b", "val", g.count + "×"), el("span", "sep"));
+      var parts = piecesParts(g.pieces);
+      parts.forEach(function (t, i) { lead.append(el("span", "cut", t + (i < parts.length - 1 ? " |" : ""))); });
       count.append(lead);
       var rest = el("div", "kpi right");
       rest.append(el("span", "lab", "Odřezek"), el("b", "val", fmt(g.rest) + " mm"));
-      head.append(count, rest);
+      head.append(rest, count);
       body.append(head);
 
       var tube = el("div", "tube");
@@ -995,15 +1000,12 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       });
     });
   }
-  // Výčet nářezů vedle násobku; když se nevejde, jde na druhý řádek pod něj
+  // Nářezy se zalamují po položkách: první řádek je vedle násobku, zbytek pod ním.
+  // Svislá čára se skryje, když by zůstala na konci řádku bez nářezu.
   function layoutCuts() {
-    Array.prototype.forEach.call(document.querySelectorAll(".pat"), function (card) {
-      card.classList.remove("cuts-low");
-      var head = card.querySelector(".pat-head");
-      var lead = card.querySelector(".lead");
-      var avail = head.clientWidth - head.lastChild.offsetWidth - 16;
-      var need = lead.firstChild.offsetWidth + 16 + lead.lastChild.offsetWidth;
-      if (need > avail) card.classList.add("cuts-low");
+    Array.prototype.forEach.call(document.querySelectorAll(".lead"), function (lead) {
+      var val = lead.querySelector(".val"), sep = lead.querySelector(".sep"), first = lead.querySelector(".cut");
+      sep.style.visibility = first && first.offsetTop > val.offsetTop + val.offsetHeight / 2 ? "hidden" : "";
     });
   }
 
