@@ -9,8 +9,7 @@ v prohlížeči, nic se neinstaluje a funguje i bez internetu (písmo Open Sans 
 * Zadáš počet kusů a délku (v milimetrech), případně vložíš celý seznam z textu (např. `10 × 3740`). Materiál: ocel nebo hliník.
 * Kalkulačka rozloží kusy na co nejmenší počet trubek, seskupí stejné nářezy a ukáže pruh každé trubky v měřítku
   6000 mm (pravítko v metrech, polohy prořezů, odřezek šrafovaně) a přehled délek.
-* Barva kusu je u pruhu, u nářezu v záhlaví karty i v přehledu délek stejná, takže se i velmi krátké kusy dají přiřadit.
-  Barev je 20, u delšího seznamu se přidají odstíny.
+* Barva kusu je v pruhu i v přehledu délek stejná. Barev je 20, u delšího seznamu se přidají odstíny.
 * Štítek „Nejmenší možný počet trubek (ověřeno)“ se ukáže, když řešič dokázal, že méně trubek být nemůže.
 * Pole **Materiál** odkazuje na stránku produktu na movitech.cz.
 * Zadání se pamatuje v prohlížeči. Výsledek jde zkopírovat, poslat e-mailem, stáhnout jako CSV, vytisknout nebo sdílet
