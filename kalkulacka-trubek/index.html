@@ -102,12 +102,12 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   grid-template-columns: minmax(0, 1fr) minmax(280px, 500px);
   grid-template-areas: "title fig" "spec spec";
   gap: 14px 28px;
-  align-items: end;
+  align-items: stretch;
   padding-top: 18px;
   container-type: inline-size;
 }
-.masthead .title { grid-area: title; min-width: 0; }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
+.masthead .title { grid-area: title; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; margin-top: .11em; }
 .masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
@@ -356,7 +356,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       <h1>Kalkulace trubek</h1>
       <p id="subtitle">Ocelové lešenářské trubky nařežeme na míru z originální délky 6000 mm</p>
     </div>
-    <svg class="drawing" id="cross" viewBox="0 0 600 190" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
+    <svg class="drawing" id="cross" viewBox="0 18 600 166" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
       <defs>
         <linearGradient id="gSide" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" style="stop-color:var(--tube-lo)"/>
