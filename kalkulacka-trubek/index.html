@@ -277,11 +277,12 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick i { position: absolute; top: 11px; left: 0; transform: translateX(-50%); font: 400 12px/1 var(--mono); font-style: normal; color: var(--ink-soft); white-space: nowrap; }
 .tick.first i { transform: none; }
 .tick.last i { transform: translateX(-100%); }
-.lead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; }
-.cuts { font: 700 15px/1.4 var(--display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.lead { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; }
+.cuts { font: 700 15px/22px var(--display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; padding-left: 16px; border-left: 2px solid var(--ink-soft); }
 @media (max-width: 600px) {
   .pat { padding: 10px 22px 12px 12px; }
   .val { font-size: 20px; }
+  .cuts { padding-left: 0; border-left: 0; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 34px; }
 }
