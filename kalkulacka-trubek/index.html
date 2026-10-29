@@ -122,6 +122,17 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   overflow: hidden;
 }
 .spec > div { background: var(--info-bg); padding: 6px 12px 7px; min-width: 0; }
+.spec > .has-link { position: relative; }
+.spec-link { display: inline-flex; align-items: center; gap: 6px; color: var(--info-ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
+.spec-link::after { content: ""; position: absolute; inset: 0; }
+.spec-link .ext { width: 12px; height: 12px; flex: none; }
+.spec > .has-link:hover { background: var(--info-rule); }
+.spec > .has-link:focus-within { outline: 3px solid var(--ink); outline-offset: -3px; }
+.spec-link:focus-visible { outline: 0; }
+.spec > .has-link.plain:hover { background: var(--info-bg); }
+.has-link.plain .spec-link { text-decoration: none; color: inherit; cursor: default; }
+.has-link.plain .spec-link::after { pointer-events: none; }
+.has-link.plain .ext { display: none; }
 .spec dt { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .spec dd { margin: 2px 0 0; font: 700 14px/1.25 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 800px) {
@@ -389,7 +400,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       <text x="540" y="174" text-anchor="middle" style="fill:var(--ink)" font-family="Open Sans, sans-serif" font-weight="700" font-size="19">Ø 48,3</text>
     </svg>
     <dl class="spec" aria-label="Parametry trubky">
-      <div><dt>Materiál</dt><dd id="specMat">Ocel</dd></div>
+      <div class="has-link"><dt>Materiál</dt><dd><a id="specMatLink" class="spec-link" href="https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm" target="_blank" rel="noopener" title="Zobrazit tuto trubku na movitech.cz"><span id="specMat">Ocel</span><svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></dd></div>
       <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
       <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
       <div><dt>Délka</dt><dd>6 000 mm</dd></div>
@@ -445,6 +456,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
   var STOCK = 6000; // délka trubky v mm, pevně daná
   var OUTER_D = 48.3; // vnější průměr trubky v mm
   var WALL_STEEL = 4.05, WALL_ALU = 4.0; // tloušťka stěny v mm
+  var MATERIAL_URL = "https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm";
   var EXAMPLE = [[3740, 10], [2465, 12], [860, 23]]; // [délka, počet]
 
   var rowsEl = document.getElementById("rows");
@@ -957,6 +969,11 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     var wallText = wall.toLocaleString("cs-CZ", { minimumFractionDigits: 2 });
     document.getElementById("subtitle").textContent = matDesc();
     document.getElementById("specMat").textContent = alu ? "Hliník" : "Ocel";
+    // odkaz na produkt je jen u oceli, k hliníku odpovídající stránka na webu není
+    var link = document.getElementById("specMatLink");
+    link.parentNode.parentNode.classList.toggle("plain", alu);
+    if (alu) { link.removeAttribute("href"); link.removeAttribute("title"); }
+    else { link.setAttribute("href", MATERIAL_URL); link.setAttribute("title", "Zobrazit tuto trubku na movitech.cz"); }
     document.getElementById("specWall").textContent = wallText + " mm";
     document.body.setAttribute("data-mat", alu ? "alu" : "steel");
     var k = 50 / (OUTER_D / 2); // průřez je nakreslený v měřítku, vnější poloměr 50
