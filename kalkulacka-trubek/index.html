@@ -116,7 +116,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   container-type: inline-size;
 }
 .masthead .title { grid-area: title; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 600px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
+.masthead h1 { font-weight: 700; font-size: clamp(28px, 4.6vw, 64px); font-size: clamp(28px, calc((100cqw - 600px) / 10.9), 64px); line-height: 1; letter-spacing: -.02em; text-wrap: balance; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
   margin: 0;
@@ -142,7 +142,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .spec dd { margin: 3px 0 0; font: 700 20px/1.2 var(--display); font-variant-numeric: tabular-nums; }
 @media (max-width: 800px) {
   .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "note"; }
-  .masthead h1 { font-size: clamp(28px, 9vw, 56px); }
+  .masthead h1 { font-size: clamp(26px, 7.6vw, 48px); }
 }
 /* pravý sloupec: nahoře žlutý počet trubek a vedle parametry, pod tím výsledek */
 .right { display: grid; gap: 20px; min-width: 0; }
@@ -371,7 +371,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
 <div class="page">
   <header class="masthead">
     <div class="title">
-      <h1>Kalkulace trubek</h1>
+      <h1>Řezání trubek na míru</h1>
     </div>
     <svg class="drawing" id="cross" viewBox="0 18 600 166" role="img" aria-label="Trubka Ø 48,3 mm, délka 6 000 mm: bokorys a průřez">
       <defs>
