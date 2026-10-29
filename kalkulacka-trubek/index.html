@@ -447,7 +447,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
         <dl class="spec" aria-label="Parametry trubky">
       <div class="has-link"><dt>Materiál</dt><dd><a id="specMatLink" class="spec-link" href="https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm" target="_blank" rel="noopener" title="Zobrazit tuto trubku na movitech.cz"><span id="specMat">Ocel</span><span class="link-hint">Odkaz na produkt<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></a></dd></div>
       <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
-      <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
+      <div><dt>Tloušťka stěny</dt><dd id="specWall">4,05 mm</dd></div>
       <div><dt>Délka</dt><dd>6 000 mm</dd></div>
     </dl>
       </div>
@@ -742,7 +742,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
     // odpověď: žlutý blok s počtem trubek a počet kusů mezi parametry vpravo
     var answer = document.getElementById("answer");
     answer.innerHTML = "";
-    answer.append(el("span", "label", "Celkový počet trubek k nařezání (" + fmt(stock).replace(/\s/g, "") + "\u00a0mm)"));
+    answer.append(el("span", "label", "Celkový počet trubek k nařezání"));
     var big = el("b", "big", String(bars.length));
     big.append(el("small", null, "ks"));
     answer.append(big);
