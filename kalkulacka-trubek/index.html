@@ -744,7 +744,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
       facts.append(d);
     }
     fact("Požadované kusy", totalPieces + " ks");
-    fact("Zbytkový materiál", fmt(totalRest) + " mm");
+    fact("Celkový zbytek materiálu", fmt(totalRest) + " mm");
     verdict.append(answer, facts);
     resultsEl.append(verdict);
 
@@ -861,7 +861,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
         var spec = document.getElementById("matAlu").checked ? "Hliníková trubka Ø 48,3 mm, tloušťka stěny 4,00 mm" : "Ocelová lešenářská trubka Ø 48,3 mm, tloušťka stěny 4,05 mm";
         var lines = [spec, "Prořez " + fmt(kerf) + " mm, délka trubky " + fmt(stock) + " mm", ""];
         lines.push("Celkem je potřeba " + bars.length + " trubek.");
-        lines.push("Požadované kusy: " + totalPieces + " ks, zbytkový materiál: " + fmt(totalRest) + " mm", "");
+        lines.push("Požadované kusy: " + totalPieces + " ks, celkový zbytek materiálu: " + fmt(totalRest) + " mm", "");
         var f = 1;
         groups.forEach(function (g) {
           var t2 = f + g.count - 1;
