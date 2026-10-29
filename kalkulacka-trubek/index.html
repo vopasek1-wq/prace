@@ -733,7 +733,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
     // odpověď a souhrn
     var verdict = el("section", "verdict");
     var answer = el("div", "answer");
-    answer.append(el("span", "label", "Celkový počet trubek k nařezání"));
+    answer.append(el("span", "label", "Celkový počet trubek k nařezání (" + fmt(stock).replace(/\s/g, "") + "\u00a0mm)"));
     var big = el("b", "big", String(bars.length));
     big.append(el("small", null, "ks"));
     answer.append(big);
