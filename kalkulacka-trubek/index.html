@@ -89,10 +89,11 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
   gap: 14px 28px;
   align-items: end;
   padding-top: 18px;
+  container-type: inline-size;
 }
 .masthead .title { grid-area: title; min-width: 0; }
-.masthead h1 { font-weight: 700; font-size: clamp(30px, 4.6vw, 52px); line-height: .96; letter-spacing: -.02em; }
-.masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 46ch; }
+.masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 540px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
+.masthead p { margin: 8px 0 0; font-size: clamp(13px, 1.6vw, 16px); color: var(--ink-soft); max-width: 64ch; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
   grid-area: spec;
@@ -110,6 +111,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .spec dd { margin: 2px 0 0; font: 700 14px/1.25 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 800px) {
   .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "spec"; }
+  .masthead h1 { font-size: clamp(28px, 9vw, 56px); }
 }
 @media (max-width: 700px) {
   .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); }
