@@ -103,7 +103,7 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .masthead {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 560px);
-  grid-template-areas: "title fig" "note note" "spec spec";
+  grid-template-areas: "title fig" "note note";
   gap: 14px 20px;
   align-items: stretch;
   padding-top: 18px;
@@ -113,10 +113,9 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .masthead h1 { font-weight: 700; font-size: clamp(30px, 6vw, 80px); font-size: clamp(30px, calc((100cqw - 600px) / 8.4), 84px); line-height: .96; letter-spacing: -.02em; white-space: nowrap; }
 .drawing { grid-area: fig; width: 100%; height: auto; display: block; }
 .spec {
-  grid-area: spec;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   background: var(--info-rule);
   border: 1px solid var(--info-line);
@@ -137,13 +136,18 @@ h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
 .spec dt { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .spec dd { margin: 2px 0 0; font: 700 14px/1.25 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 800px) {
-  .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "note" "spec"; }
+  .masthead { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "fig" "note"; }
   .masthead h1 { font-size: clamp(28px, 9vw, 56px); }
 }
-@media (max-width: 700px) {
-  .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .spec > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
-}
+/* pravý sloupec: nahoře žlutý počet trubek a vedle parametry, pod tím výsledek */
+.right { display: grid; gap: 20px; min-width: 0; }
+.toprow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.toprow:not(.has-answer) { grid-template-columns: minmax(0, 1fr); }
+.toprow:not(.has-answer) .spec { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.spec > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+#answer:empty { display: none; }
+@media (max-width: 700px) { .toprow:not(.has-answer) .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .toprow { grid-template-columns: minmax(0, 1fr); } }
 
 /* Rozložení */
 .workspace {
@@ -243,17 +247,10 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 
 /* Výsledek */
 .results { display: grid; gap: 20px; min-width: 0; }
-.verdict { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 12px; align-items: stretch; }
-@media (max-width: 640px) { .verdict { grid-template-columns: minmax(0, 1fr); } }
 .answer { background: var(--signal); color: var(--on-signal); border-radius: 0; padding: 10px 14px 12px; display: grid; gap: 2px; align-content: space-between; }
 .answer .label { color: var(--on-signal); font-size: 13px; }
 .answer .big { font: 700 clamp(46px, 7vw, 68px)/.85 var(--display); letter-spacing: -.03em; padding-top: 6px; }
 .answer .big small { font: 700 clamp(15px, 1.9vw, 19px) var(--display); letter-spacing: 0; margin-left: 4px; }
-.facts { margin: 0; display: grid; align-content: stretch; padding: 0 14px; background: var(--sheet); border: 1px solid var(--info-line); border-left: 4px solid var(--bar); }
-.facts > div { display: flex; flex-direction: column; justify-content: center; gap: 0; padding: 6px 2px; border-bottom: 1px solid var(--info-rule); }
-.facts > div:last-child { border-bottom: 0; }
-.facts dt { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
-.facts dd { margin: 0; font: 700 clamp(17px, 2vw, 21px)/1.1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 
 .masthead .note { grid-area: note; margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 .results h2 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
@@ -359,7 +356,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
   .workspace { display: block; margin-top: 16px; }
   #form, .out-actions, .empty button { display: none !important; }
   .masthead { padding-top: 0; }
-  .pat, .verdict, .overview { break-inside: avoid; }
+  .pat, .toprow, .overview { break-inside: avoid; }
   .results { gap: 24px; }
 }
 </style>
@@ -400,12 +397,6 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
       <text x="540" y="174" text-anchor="middle" style="fill:var(--ink)" font-family="Open Sans, sans-serif" font-weight="700" font-size="19">Ø 48,3</text>
     </svg>
     <p class="note" id="note">Ocelové lešenářské trubky řežeme z originální délky 6000 mm s ohledem na minimální prořez a odpad. Prořez činí 3 mm, tolerance ±5 mm.</p>
-    <dl class="spec" aria-label="Parametry trubky">
-      <div class="has-link"><dt>Materiál</dt><dd><a id="specMatLink" class="spec-link" href="https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm" target="_blank" rel="noopener" title="Zobrazit tuto trubku na movitech.cz"><span id="specMat">Ocel</span><span class="link-hint">Odkaz na produkt<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></a></dd></div>
-      <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
-      <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
-      <div><dt>Délka</dt><dd>6 000 mm</dd></div>
-    </dl>
   </header>
 
   <main class="workspace">
@@ -443,7 +434,19 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
       </div>
     </form>
 
-    <section class="results" id="results" aria-live="polite"></section>
+    <div class="right">
+      <div class="toprow" id="toprow">
+        <div class="answer" id="answer"></div>
+        <dl class="spec" aria-label="Parametry trubky">
+      <div class="has-link"><dt>Materiál</dt><dd><a id="specMatLink" class="spec-link" href="https://www.movitech.cz/ocelova-lesenarska-trubka-o-48-3-mm-tloustka-steny-4-05-mm" target="_blank" rel="noopener" title="Zobrazit tuto trubku na movitech.cz"><span id="specMat">Ocel</span><span class="link-hint">Odkaz na produkt<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></a></dd></div>
+      <div><dt>Průměr</dt><dd>Ø 48,3 mm</dd></div>
+      <div><dt>Stěna</dt><dd id="specWall">4,05 mm</dd></div>
+      <div><dt>Délka</dt><dd>6 000 mm</dd></div>
+      <div id="specPiecesCell" hidden><dt>Požadované kusy</dt><dd id="specPieces"></dd></div>
+    </dl>
+      </div>
+      <section class="results" id="results" aria-live="polite"></section>
+    </div>
   </main>
 </div>
 
@@ -730,23 +733,16 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
 
     updateSubtitle();
 
-    // odpověď a souhrn
-    var verdict = el("section", "verdict");
-    var answer = el("div", "answer");
+    // odpověď: žlutý blok s počtem trubek a počet kusů mezi parametry vpravo
+    var answer = document.getElementById("answer");
+    answer.innerHTML = "";
     answer.append(el("span", "label", "Celkový počet trubek k nařezání (" + fmt(stock).replace(/\s/g, "") + "\u00a0mm)"));
     var big = el("b", "big", String(bars.length));
     big.append(el("small", null, "ks"));
     answer.append(big);
-    var facts = el("dl", "facts");
-    function fact(label, value) {
-      var d = el("div");
-      d.append(el("dt", null, label), el("dd", null, value));
-      facts.append(d);
-    }
-    fact("Požadované kusy", totalPieces + " ks");
-    fact("Celkový zbytek materiálu", fmt(totalRest) + " mm");
-    verdict.append(answer, facts);
-    resultsEl.append(verdict);
+    document.getElementById("toprow").classList.add("has-answer");
+    document.getElementById("specPieces").textContent = totalPieces + " ks";
+    document.getElementById("specPiecesCell").hidden = false;
 
     // plán řezání
     var plan = el("section", "plan");
@@ -928,7 +924,7 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
   function revealResults() {
     if (!window.matchMedia("(max-width: 900px)").matches) return;
     var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    resultsEl.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
+    document.querySelector(".right").scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
   }
 
   function save() {
@@ -1043,6 +1039,9 @@ tfoot .sum-label td { border-top: 2px solid var(--info-line); padding-bottom: 0;
   // prázdný stav: náznak pruhu trubky a tlačítko s ukázkovým zadáním
   function showEmpty() {
     resultsEl.innerHTML = "";
+    document.getElementById("answer").innerHTML = "";
+    document.getElementById("toprow").classList.remove("has-answer");
+    document.getElementById("specPiecesCell").hidden = true;
     var box = el("div", "empty");
     var hd = el("div", "hd");
     hd.append(el("strong", null, "Zatím žádný výpočet"));
