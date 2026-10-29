@@ -225,7 +225,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .error { margin: 0; padding: 10px 12px; border-left: 4px solid var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--ink); font-weight: 700; font-size: 13px; }
 
 .bulk { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--rule); }
-.bulk textarea { height: auto; min-height: 84px; padding: 8px 12px; font-size: 16px; resize: vertical; line-height: 1.5; }
+.bulk textarea { height: auto; min-height: 84px; padding: 8px 12px; font-size: 16px; resize: none; overflow-y: hidden; line-height: 1.5; }
 .hint { font-size: 12px; color: var(--ink-soft); margin: 0; }
 .h2-note { font: 400 12px var(--display); color: var(--ink-soft); letter-spacing: 0; }
 
@@ -1010,10 +1010,19 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       l.style.visibility = l.offsetWidth + 8 > l.parentNode.clientWidth ? "hidden" : "";
     });
   }
+  // pole se seznamem roste s počtem řádků, takže je vidět celý seznam
+  var bulkEl = document.getElementById("bulk");
+  function fitBulk() {
+    bulkEl.style.height = "auto";
+    bulkEl.style.height = (bulkEl.scrollHeight + bulkEl.offsetHeight - bulkEl.clientHeight) + "px";
+  }
+  bulkEl.addEventListener("input", fitBulk);
+  fitBulk();
+
   var resizeTimer;
-  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { layoutCuts(); layoutKerfLabels(); layoutSegLabels(); }, 100); });
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { fitBulk(); layoutCuts(); layoutKerfLabels(); layoutSegLabels(); }, 100); });
   // po načtení písma se šířky textu změní, rozložení se přepočítá
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layoutCuts(); layoutKerfLabels(); layoutSegLabels(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitBulk(); layoutCuts(); layoutKerfLabels(); layoutSegLabels(); });
 
   // prázdný stav: náznak pruhu trubky a tlačítko s ukázkovým zadáním
   function showEmpty() {
