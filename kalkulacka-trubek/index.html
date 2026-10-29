@@ -239,7 +239,7 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .plan { display: grid; gap: 8px; }
 .plan > h2 { margin-bottom: 2px; }
 .pat {
-  padding: 12px 18px 14px 16px;
+  padding: 12px 28px 14px 16px;
   background: var(--sheet);
   border: 1px solid var(--rule);
   border-left: 4px solid var(--bar);
@@ -265,6 +265,8 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
   background: linear-gradient(to bottom, rgba(255,255,255,.40) 0, rgba(255,255,255,.07) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.26) 100%);
 }
 .seg { display: flex; align-items: center; justify-content: center; min-width: 0; overflow: hidden; white-space: nowrap; font: 700 12px var(--mono); }
+.seg > .lbl { flex: none; }
+.seg.rest-seg > .lbl { font: 400 12px var(--display); color: var(--ink-soft); background: var(--sheet); padding: 1px 6px; }
 .kerf { position: relative; }
 .kerf::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; transform: translateX(-50%); background: var(--sheet); z-index: 1; }
 .seg.rest-seg { background: repeating-linear-gradient(135deg, var(--hatch) 0 2px, transparent 2px 8px), var(--sheet); }
@@ -276,8 +278,9 @@ button.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--si
 .tick.last i { transform: translateX(-100%); }
 .cuts { margin-top: 6px; font: 400 13px/1.5 var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 @media (max-width: 600px) {
-  .pat { padding: 10px 12px 12px 12px; }
+  .pat { padding: 10px 22px 12px 12px; }
   .val { font-size: 20px; }
+  .kpi.right { text-align: left; }
   .mult { font: 700 32px/1 var(--display); letter-spacing: -.04em; padding-top: 0; }
   .bar { height: 34px; }
 }
@@ -752,7 +755,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
         s.style.background = colors[p];
         s.style.color = textOn(colors[p]);
         s.title = fmt(p) + " mm";
-        s.textContent = p / stock > 0.09 ? fmt(p) : "";
+        s.append(segLabel(fmt(p)));
         bar.append(s);
         pos += p;
       });
@@ -761,6 +764,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
         var r = el("span", "seg rest-seg");
         r.style.flex = g.rest + " 1 0";
         r.title = "odřezek " + fmt(g.rest) + " mm";
+        r.append(segLabel("odřezek"));
         bar.append(r);
       }
       tube.append(labels, bar, makeRuler(stock));
@@ -772,6 +776,7 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
     });
     resultsEl.append(plan);
     layoutKerfLabels();
+    layoutSegLabels();
 
     // přehled délek
     var tp = el("section", "overview");
@@ -839,6 +844,9 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       resultsEl.append(out);
     }
   }
+
+  // popisek uvnitř pruhu; skryje se, když se do kusu nevejde (viz layoutSegLabels)
+  function segLabel(text) { return el("span", "lbl", text); }
 
   // pravítko po 500 mm, popisky po metrech; ukazuje stejné měřítko jako pruh trubky
   function makeRuler(stock) {
@@ -964,8 +972,14 @@ tfoot .sum-label td { border-top: 2px solid var(--ink); padding-bottom: 0; font:
       });
     });
   }
+  // Délka nebo slovo „odřezek“ se v pruhu ukáže jen tam, kde se vejde
+  function layoutSegLabels() {
+    Array.prototype.forEach.call(document.querySelectorAll(".seg > .lbl"), function (l) {
+      l.style.visibility = l.offsetWidth + 8 > l.parentNode.clientWidth ? "hidden" : "";
+    });
+  }
   var resizeTimer;
-  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutKerfLabels, 100); });
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { layoutKerfLabels(); layoutSegLabels(); }, 100); });
 
   // prázdný stav: náznak pruhu trubky a tlačítko s ukázkovým zadáním
   function showEmpty() {
