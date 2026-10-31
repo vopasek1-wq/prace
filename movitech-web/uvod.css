@@ -1,0 +1,135 @@
+/* Uvod movitech.cz (31. 10. 2026): pasek cisel, Jak u nas nakoupite, Pouzite lesení skladem,
+   Realizace se systemy Scafom-rux (slider, fotky se zvetsuji pres swipebox webu), Certifikace a dokumentace, O nas ve zkratce s videem */
+[class^="uk-"], [class*=" uk-"] { box-sizing: border-box; }
+.uk-sekce { padding: 56px 0 8px; }
+.uk-wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.uk-lead { max-width: 760px; margin: -6px auto 26px; text-align: center; font-size: 16px; line-height: 26px; color: #5f6f78; }
+.uk-karta { border: 1px solid #e3e7ea; border-top: 2px solid #b7e5df; border-radius: 0 0 6px 6px; background: #fff; }
+.uk-odkaz { color: #1e2226; text-decoration: none; border-bottom: 1px solid #b7e5df; }
+.uk-odkaz:hover { border-color: #4ec3b7; }
+.uk-dalsi { text-align: center; margin: 22px 0 0; font-size: 15px; }
+.uk-tl { display: inline-block; padding: 15px 26px; border: 1px solid #d7dde2; border-radius: 3px; background: #fff; font-size: 15px; font-weight: 600; color: #70cfe3; text-decoration: none; }
+.uk-tl:hover { border-color: #70cfe3; }
+/* sedy text na uvodu o kousek tmavsi: kontrast 5,2 : 1 misto 3,5 : 1 (doporuceni WCAG je aspon 4,5 : 1) */
+.section-info-links.nv2 p, .cun__txt .cun__text, .uk-lead, .uk-cislo span, .uk-krok p, .uk-real .uk-meta, .uk-dok span,
+.references__item p, .news-box__info p, .section-faq .faq-wrap details p, .mv-onas__video figcaption, .mv-onas__video figcaption a { color: #5f6f78; }
+
+/* pasek cisel */
+.uk-cisla { border-top: 1px solid #e3e7ea; border-bottom: 1px solid #e3e7ea; background: #f7f9fa; margin-top: 40px; }
+.uk-cisla .uk-wrap { display: flex; }
+.uk-cislo { flex: 1 1 0; padding: 26px 18px 24px; text-align: center; }
+.uk-cislo + .uk-cislo { border-left: 1px solid #e3e7ea; }
+.uk-cislo b { display: block; font-size: 34px; line-height: 40px; font-weight: 400; color: #1e2226; letter-spacing: -.01em; }
+.uk-cislo b:after { content: ""; display: block; width: 28px; height: 2px; margin: 10px auto 10px; background: #70cfe3; }
+.uk-cislo span { display: block; font-size: 14px; line-height: 21px; color: #5f6f78; }
+
+/* jak u nas nakoupite */
+.uk-kroky { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.uk-krok { padding: 22px 20px 20px; border: 1px solid #e3e7ea; border-top: 2px solid #b7e5df; border-radius: 0 0 6px 6px; background: #fff; }
+.uk-krok-c { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #70cfe3; color: #70cfe3; font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.uk-krok h3 { margin: 0 0 6px; font-size: 19px; line-height: 26px; font-weight: 500; color: #1e2226; }
+.uk-krok p { margin: 0; font-size: 15px; line-height: 24px; color: #5f6f78; }
+.uk-krok p a { color: #1e2226; border-bottom: 1px solid #b7e5df; text-decoration: none; }
+
+/* pouzite lesení skladem */
+.uk-produkty { display: flex; gap: 16px; }
+.uk-produkt { flex: 1 1 0; padding: 14px 16px 18px; text-decoration: none; display: flex; flex-direction: column; }
+.uk-produkt img { width: 100%; height: 170px; object-fit: contain; margin-bottom: 12px; }
+.uk-produkt strong { font-size: 16px; line-height: 23px; font-weight: 500; color: #232323; margin-bottom: 10px; }
+.uk-skladem { font-size: 13px; color: #4ec3b7; margin-bottom: 14px; }
+.uk-skladem:before { content: "●"; margin-right: 6px; font-size: 10px; vertical-align: 1px; }
+.uk-produkt .uk-poptat { margin-top: auto; font-size: 14px; font-weight: 600; color: #70cfe3; }
+.uk-produkt:hover { border-color: #4ec3b7; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+
+/* realizace – slider */
+.uk-slider { position: relative; }
+.uk-pas { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+.uk-pas::-webkit-scrollbar { display: none; }
+.uk-real { flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start; overflow: hidden; }
+.uk-real .uk-foto { position: relative; height: 230px; background: #e9edf0; }
+.uk-real .uk-foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
+.uk-real .uk-foto i { position: absolute; left: 10px; bottom: 10px; padding: 2px 8px; background: rgba(30,34,38,.72); color: #fff; font-style: normal; font-size: 11px; border-radius: 3px; pointer-events: none; }
+.uk-zoom { display: block; height: 100%; cursor: zoom-in; }
+.uk-zoom:hover img { opacity: .9; }
+.uk-zoom:focus-visible { outline: 2px solid #70cfe3; outline-offset: -2px; }
+.uk-real .uk-text { padding: 16px 18px 20px; }
+.uk-real h3 { margin: 0 0 6px; font-size: 19px; line-height: 26px; font-weight: 500; color: #1e2226; }
+.uk-real .uk-meta { font-size: 14px; line-height: 22px; color: #5f6f78; }
+.uk-real .uk-meta b { font-weight: 600; color: #1e2226; }
+.uk-sipka { position: absolute; top: 95px; z-index: 3; width: 44px; height: 44px; border: 1px solid #e3e7ea; border-radius: 3px; background: #fff center / 18px no-repeat; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%231e2226' stroke-width='1.6'/%3E%3C/svg%3E"); }
+.uk-sipka--l { left: -22px; transform: scaleX(-1); }
+.uk-sipka--p { right: -22px; }
+.uk-sipka:hover { border-color: #70cfe3; }
+.uk-sipka[disabled] { opacity: .35; cursor: default; }
+.uk-tecky { display: flex; justify-content: center; gap: 8px; margin: 18px 0 0; }
+.uk-tecky span { width: 8px; height: 8px; border-radius: 50%; background: #d7dde2; }
+.uk-tecky span.on { background: #70cfe3; }
+.uk-cz { max-width: 820px; margin: 26px auto 0; text-align: center; font-size: 16px; line-height: 26px; color: #4f5d66; }
+
+/* certifikace a dokumentace */
+.uk-sekce.uk-sekce--cert { padding-top: 16px; }
+.uk-doky { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.uk-dok { display: flex; gap: 14px; align-items: flex-start; padding: 18px 18px 18px 16px; text-decoration: none; }
+.uk-dok svg { flex: 0 0 34px; }
+.uk-dok strong { display: block; font-size: 16px; line-height: 23px; font-weight: 500; color: #232323; }
+.uk-dok span { display: block; font-size: 14px; line-height: 21px; color: #5f6f78; }
+.uk-dok em { display: block; margin-top: 6px; font-style: normal; font-size: 13px; font-weight: 600; color: #70cfe3; }
+.uk-dok:hover { border-color: #4ec3b7; }
+
+/* O nas ve zkratce s videem */
+.section-about.mv-onas { display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr); gap: 56px; align-items: center; max-width: 1180px; margin: 0 auto; padding: 110px 30px 100px; text-align: left; background-position: 96% 50%; }
+.mv-onas__video { order: -1; margin: 0; }
+.mv-onas__text .section-headline { padding: 0 0 22px; text-align: left; }
+.section-about.mv-onas p { font-family: 'open_sans', sans-serif; font-style: normal; font-size: 16px; line-height: 1.8; color: #5b6b75; max-width: none; margin: 0 0 30px; }
+.mv-video { position: relative; aspect-ratio: 16/9; background: #14181c; overflow: hidden; }
+.mv-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mv-video button { position: absolute; border: 0; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity .2s; }
+.mv-video__hraj { left: 50%; top: 50%; width: 66px; height: 66px; margin: -33px 0 0 -33px; border-radius: 50%; background: rgba(255,255,255,.92); color: #1f9db8; }
+.mv-video__hraj svg { margin-left: 3px; }
+.mv-video__hraj:hover { background: #fff; }
+.mv-video__pauza { right: 12px; bottom: 12px; width: 34px; height: 34px; background: rgba(20,24,28,.55); color: #fff; opacity: 0; pointer-events: none; }
+.mv-video.hraje .mv-video__hraj { opacity: 0; pointer-events: none; }
+.mv-video.hraje:hover .mv-video__pauza, .mv-video.hraje .mv-video__pauza:focus-visible { opacity: 1; pointer-events: auto; }
+.mv-onas__video figcaption { margin-top: 10px; font-size: 13px; color: #5f6f78; }
+.mv-onas__video figcaption a { color: #5f6f78; text-decoration: underline; }
+.mv-onas__video figcaption a:hover { color: #1f9db8; }
+
+@media screen and (max-width: 79.9375em) {
+    .section-about.mv-onas { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 40px; padding: 90px 30px 84px; }
+}
+@media screen and (max-width: 1100px) {
+    .uk-kroky, .uk-doky { grid-template-columns: repeat(2, 1fr); }
+    .uk-produkty { flex-wrap: wrap; }
+    .uk-produkt { flex: 1 1 calc(50% - 8px); }
+    .uk-real { flex-basis: calc((100% - 20px) / 2); }
+}
+@media screen and (max-width: 63.9375em) {
+    .section-about.mv-onas { gap: 32px; padding: 76px 30px 72px; }
+}
+@media screen and (max-width: 47.9375em) {
+    .uk-sekce { padding-top: 40px; }
+    .uk-cisla .uk-wrap { flex-wrap: wrap; padding: 0; }
+    .uk-cislo { flex: 0 0 50%; padding: 18px 10px; }
+    .uk-cislo + .uk-cislo { border-left: 0; }
+    .uk-cislo:nth-child(2n) { border-left: 1px solid #e3e7ea; }
+    .uk-cislo:nth-child(n+3) { border-top: 1px solid #e3e7ea; }
+    .uk-cislo b { font-size: 26px; line-height: 32px; }
+    .uk-kroky, .uk-doky { grid-template-columns: 1fr; gap: 12px; }
+    .uk-krok { padding: 16px 18px; }
+    .uk-produkty { gap: 10px; }
+    .uk-produkt { flex: 0 0 calc(50% - 5px); padding: 10px 10px 14px; }
+    .uk-produkt img { height: 120px; }
+    .uk-produkt strong { font-size: 14px; line-height: 20px; }
+    .uk-skladem { font-size: 12px; margin-bottom: 10px; }
+    .uk-produkt .uk-poptat { font-size: 13px; white-space: nowrap; }
+    .uk-pas { gap: 12px; }
+    .uk-real { flex: 0 0 84%; }
+    .uk-real .uk-foto { height: 190px; }
+    .uk-sipka { display: none; }
+    .section-about.mv-onas { grid-template-columns: minmax(0,1fr); gap: 30px; padding: 60px 20px 56px; text-align: center; background-position: center 22%; }
+    .mv-onas__video { order: 0; }
+    .mv-onas__text .section-headline { text-align: center; }
+    .section-about.mv-onas p { margin-bottom: 26px; }
+    .mv-video.hraje .mv-video__pauza { opacity: 1; pointer-events: auto; }
+}
