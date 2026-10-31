@@ -667,6 +667,32 @@ html.sx-js body{padding-top:86px}
             .rz--a .rz-d { height: 240px; }
         }
     </style>
+    <style>
+        /* Kompaktnejsi uvodni blok (31. 10. 2026) */
+        .rz-kicker { margin-bottom: 6px; }
+        .rz-h1 { margin-bottom: 6px; }
+        .rz-claim { max-width: none; line-height: 1.5; }
+        .rz-duvera { margin-top: 10px; }
+        @media screen and (min-width: 48em) {
+            .rz--a .rz-text { padding: 24px 48px 20px; }
+            .rz--a .rz-duvera { margin-top: 10px; }
+        }
+        @media screen and (min-width: 48em) and (max-width: 79.9375em) {
+            .rz--a .rz-text { padding: 22px 32px 18px; }
+        }
+        @media screen and (max-width: 47.9375em) {
+            .rz-text { padding: 18px 16px 16px; }
+            .rz-akce { margin-top: 14px; }
+        }
+        /* Vetsi vyhledavani */
+        @media screen and (min-width: 64em) {
+            html body #sx .sx__bar { height: 48px; }
+            html body #sx .sx__input { font-size: 15px; }
+            html body #sx .sx__input::placeholder { font-size: 14px; }
+            html body #sx .sx__icon { width: 20px; height: 20px; background-size: 20px 20px; margin-left: 16px; }
+            html body .main-header #sx { flex: 1 1 520px; max-width: 560px; }
+        }
+    </style>
     <section class="rz rz--a">
         <div class="rz-text">
             <p class="rz-kicker"><a href="https://www.movitech.cz/scafom-rux">Výhradní zastoupení Scafom&#8209;rux pro ČR</a></p>
