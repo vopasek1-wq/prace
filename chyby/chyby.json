@@ -42,6 +42,13 @@
       "stranka": "",
       "sloupec": "zavazne",
       "fotky": []
+    },
+    {
+      "id": "cmwdm9izc",
+      "text": "Tři dvojice stránek o tomtéž si konkurují ve vyhledávání:\n/staticky-posudek-leseni a /staticky-posudek-leseni-125 mají stejný titulek i nadpis.\n/oploceni a /mobilni-oploceni mají stejný nadpis.\n/shozy-na-sut-53 a /shozy-na-sut-60 mají stejný nadpis.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
