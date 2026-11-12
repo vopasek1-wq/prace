@@ -15,7 +15,8 @@ v prohlížeči, nic se neinstaluje a funguje i bez internetu (písmo Open Sans 
 * Zadání se pamatuje v prohlížeči. Výsledek jde zkopírovat, poslat e-mailem, stáhnout jako CSV, vytisknout nebo sdílet
   odkazem se zadáním (`#ocel-3740x10-2465x12`, desetinná tečka je `p`). Tisk, CSV, odkaz a e-mail jsou jen ve
   stránce otevřené samostatně, ne ve vloženém náhledu.
-* Světlý i tmavý režim podle nastavení zařízení, ovládání z klávesnice a čtečky obrazovky (ověřeno nástrojem axe).
+* Vzhled odpovídá webu movitech.cz (listopad 2026), aby do něj stránka zapadla: jen světlý režim, bez tmavého.
+* Ovládání z klávesnice a čtečky obrazovky (ověřeno nástrojem axe).
 
 ## Jak se počítá
 
