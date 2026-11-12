@@ -220,10 +220,10 @@ function vykresli() {
     el.className = 'sloupec ' + s.id;
     el.innerHTML = `<h2>${s.nazev}<span class="pocet">${polozky.length}</span></h2>`;
     if (s.id === 'hotovo') {
-      const sb = ls.get('chyby_hotovo_sbalene') === '1';
+      const sb = ls.get('chyby_hotovo_rozbalene') !== '1'; // výchozí stav: sbaleno
       el.classList.toggle('sbaleny', sb);
       t.classList.toggle('hotovo-sbaleno', sb);
-      const prepni = () => { ls.set('chyby_hotovo_sbalene', sb ? null : '1'); vykresli(); };
+      const prepni = () => { ls.set('chyby_hotovo_rozbalene', sb ? '1' : null); vykresli(); };
       if (sb) { el.onclick = prepni; el.title = 'Rozbalit Hotovo'; }
       else {
         const x = document.createElement('button'); x.className = 'sbalit'; x.textContent = 'Sbalit »'; x.onclick = prepni;
