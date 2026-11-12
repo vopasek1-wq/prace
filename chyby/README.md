@@ -21,7 +21,6 @@ Všechna data jsou v **`chyby/chyby.json`**:
   "sloupec": "zavazne",
   "text": "Co je špatně (jeden text, starší záznamy mohou mít místo něj nazev + popis)",
   "stranka": "web-mobilo/index.html",
-  "datum": "2026-11-12",
   "fotky": ["fotky/abc123.jpg"]
 } ] }
 ```

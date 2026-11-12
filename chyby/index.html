@@ -214,7 +214,7 @@ function box(c) {
     b.appendChild(f);
   }
   const m = document.createElement('div'); m.className = 'meta';
-  m.textContent = [c.stranka, c.datum].filter(Boolean).join(' · '); b.appendChild(m);
+  if (c.stranka) { m.textContent = c.stranka; b.appendChild(m); }
   const a = document.createElement('div'); a.className = 'akce';
   const btn = (txt, fn) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; a.appendChild(x); };
   btn('Upravit', () => otevri(c));
@@ -337,7 +337,7 @@ $('#dlgBox').addEventListener('close', () => {
   const hodnoty = { text: $('#fText').value.trim(), stranka: $('#fStranka').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
   if (!hodnoty.text && !hodnoty.fotky.length) return;
   if (upravovane) { const c = data.chyby.find(x => x.id === upravovane); delete c.nazev; delete c.popis; Object.assign(c, hodnoty); }
-  else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty, datum: new Date().toISOString().slice(0, 10) });
+  else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty });
   uloz();
 });
 
