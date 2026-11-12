@@ -36,6 +36,7 @@
   .box p.text { font-weight: 500; }
   .box { cursor: pointer; } .box:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
   .box p.text.zkraceny { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  main.cele .box p.text.zkraceny { display: block; overflow: visible; }
   .vice { border: none; background: none; padding: 0; margin: 0 0 6px; font-size: 13px; color: var(--muted); text-decoration: underline; }
   .meta { font-size: 12px; color: var(--muted); }
   .akce { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -246,6 +247,8 @@ const jeSbaleny = id => id !== 'upravit' && (ls.get('chyby_sbaleno_' + id) ?? (i
 function vykresli() {
   const t = $('#tabule');
   t.innerHTML = '';
+  // když jsou ostatní sloupce sbalené, je místa dost – texty se nezkracují
+  t.classList.toggle('cele', jeSbaleny('zavazne') && jeSbaleny('hotovo'));
   t.style.setProperty('--sloupce', SLOUPCE.map(s => jeSbaleny(s.id) ? '48px' : '1fr').join(' '));
   for (const s of SLOUPCE) {
     const dotaz = bezDiakritiky($('#hledat').value.trim());
