@@ -47,7 +47,8 @@
   input, textarea, select { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
   textarea { min-height: 40vh; resize: vertical; }
   .fotky { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
-  .fotky img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; cursor: zoom-in; background: var(--line); }
+  .fotky img { width: 140px; height: 105px; object-fit: cover; border-radius: 6px; cursor: zoom-in; background: var(--line); }
+  #fFotky img { width: 200px; height: 150px; }
   .fotky-edit { position: relative; display: inline-block; }
   .fotky-edit button { position: absolute; top: -6px; right: -6px; padding: 0 6px; font-size: 12px; border-radius: 99px; }
   #dlgFoto { padding: 0; background: transparent; width: auto; max-width: 95vw; }
@@ -81,8 +82,6 @@
     <input id="fFoto" type="file" accept="image/*" multiple>
     <button type="button" class="schranka" id="btnSchranka">Vložit ze schránky</button>
     <span class="meta">nebo stiskni Ctrl+V</span>
-    <label for="fStranka">Stránka / soubor</label>
-    <input id="fStranka" placeholder="např. web-mobilo/index.html">
     <label for="fSloupec">Sloupec</label>
     <select id="fSloupec"></select>
     <div class="dialog-tl">
@@ -338,7 +337,6 @@ function otevri(c, sloupec) {
   upravovane = c ? c.id : null;
   $('#dlgNadpis').textContent = c ? 'Upravit chybu' : 'Nová chyba';
   $('#fText').value = c ? textChyby(c) : '';
-  $('#fStranka').value = c?.stranka || '';
   $('#fSloupec').value = c?.sloupec || sloupec;
   fotkyForm = [...(c?.fotky || [])];
   vykresliFotkyForm();
@@ -349,7 +347,7 @@ $('#fSloupec').innerHTML = SLOUPCE.map(s => `<option value="${s.id}">${s.nazev}<
 
 $('#dlgBox').addEventListener('close', () => {
   if ($('#dlgBox').returnValue !== 'ulozit') return;
-  const hodnoty = { text: $('#fText').value.trim(), stranka: $('#fStranka').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
+  const hodnoty = { text: $('#fText').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
   if (!hodnoty.text && !hodnoty.fotky.length) return;
   if (upravovane) { const c = data.chyby.find(x => x.id === upravovane); delete c.nazev; delete c.popis; Object.assign(c, hodnoty); }
   else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty });
