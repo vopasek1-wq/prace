@@ -45,7 +45,7 @@
   .akce .b-hotovo  { background: var(--green-bg); color: var(--green); border-color: #a9d6b5; }
   .akce .b-smazat  { color: var(--muted); margin-left: auto; }
   .akce .b-smazat:hover { color: var(--red); border-color: var(--red); }
-  .pridat { width: 100%; background: rgba(255,255,255,.6); border-style: dashed; }
+  .pridat { width: 100%; background: rgba(255,255,255,.6); border-style: dashed; margin-bottom: 10px; }
   dialog { border: none; border-radius: 12px; padding: 20px; width: min(1000px, calc(100vw - 32px)); }
   dialog::backdrop { background: rgba(0,0,0,.35); }
   label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
@@ -230,11 +230,11 @@ function vykresli() {
         el.querySelector('h2 .pocet').before(x);
       }
     }
-    for (const c of polozky) el.appendChild(box(c));
     const p = document.createElement('button');
     p.className = 'pridat'; p.textContent = '+ Přidat';
     p.onclick = () => otevri(null, s.id);
     el.appendChild(p);
+    for (const c of polozky) el.appendChild(box(c));
     t.appendChild(el);
   }
 }
