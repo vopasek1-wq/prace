@@ -278,6 +278,12 @@
       "fotky": [
         "fotky/mwdvm8mo15gf.jpg"
       ]
+    },
+    {
+      "id": "cmwdzxrsm",
+      "text": "Mobil\nPevná lišta „Nezávazná poptávka | telefon“ dole. Je na košíku, v kontaktních údajích i na Shrnutí a zakrývá spodních 63 px obsahu. Vede na /kontakt. Na Shrnutí leží těsně vedle skutečného tlačítka „Odeslat nezávaznou poptávku“, které se jmenuje skoro stejně. Zákazník může ťuknout na lištu místo na odeslání a skončit na kontaktech. Oprava: lištu skrýt na stránkách košíku (/kosik/*).\n\nPrvní ťuknutí na „Přidat do košíku“ spolkne cookie okno. Při nové relaci se po ťuknutí otevřelo okno s cookies a zboží se nepřidalo (počítadlo zůstalo prázdné, ani po zavření okna). Přidalo se až při druhém ťuknutí. Viděl jsem to jednou, na nové relaci. Oprava: po volbě v cookie okně provést přidání, které uživatel původně chtěl.\n\nV košíku jsou ovládací prvky nízké. Tlačítka − a + mají 28 × 32 px, pole počtu 46 × 32 px, „Odebrat“ 50 × 21 px a odkazy „Upravit“ 47 × 22 px. Na detailu produktu mají plus a mínus přes 44 px, v košíku méně.\n\nPísmo v polích formuláře má 14,5 px. Prohlížeč na iPhonu při menším písmu než 16 px přiblíží stránku po ťuknutí do pole a zákazník ji musí zase oddálit. Na iPhonu jsem to nezkoušel, vycházím z naměřené velikosti písma.\nKalkulačky na širokém monitoru",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
