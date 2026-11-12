@@ -135,6 +135,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdnokua",
+      "text": "Dvojité objednávky.\nPo odeslání zůstane adresa v historii prohlížeče. Tlačítko Zpět, obnovení stránky nebo obnovení karet po restartu ji načte znovu. Pokud má zákazník v tu chvíli něco v košíku, odejde druhá objednávka. Dvojklik na tlačítko může udělat totéž.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
