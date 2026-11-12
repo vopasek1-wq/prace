@@ -10,7 +10,7 @@ Tabule chyb webu ve třech sloupcích. Otevři `index.html` (nejlépe přes GitH
 
 ## Ukládání
 * **Napojit GitHub** (vpravo nahoře): vlož fine-grained token s právem *Contents: Read and write* k repozitáři `prace`. Každá změna se pak hned uloží do `chyby/chyby.json` a fotky do `chyby/fotky/`.
-* Bez tokenu: změny zůstanou jen v prohlížeči. Tlačítkem **Stáhnout JSON** si soubor stáhneš a nahraješ do repozitáře.
+* Bez tokenu je tabule **jen ke čtení** (kamarád ji tak může prohlížet bez nastavování).
 
 ## Pro Clauda (a další, kdo opravuje)
 Všechna data jsou v **`chyby/chyby.json`**:
@@ -27,7 +27,7 @@ Všechna data jsou v **`chyby/chyby.json`**:
 } ] }
 ```
 
-Postup:
+Postup (bez tokenu, Claude pracuje přímo v repozitáři):
 1. Přečti `chyby/chyby.json`, začni sloupcem `zavazne`, pak `upravit`. Fotky (cesty relativně ke složce `chyby/`) ukazují problém.
 2. Oprav chybu v souboru uvedeném ve `stranka`.
 3. Přesuň box do hotových: změň `"sloupec"` na `"hotovo"` a do `popis` krátce dopiš, co se opravilo.

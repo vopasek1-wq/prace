@@ -49,6 +49,9 @@
   .fotky-edit button { position: absolute; top: -6px; right: -6px; padding: 0 6px; font-size: 12px; border-radius: 99px; }
   #dlgFoto { padding: 0; background: transparent; width: auto; max-width: 95vw; }
   #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
+  body.cteni .pridat, body.cteni .akce, body.cteni #btnStahnout { display: none; }
+  body.cteni .box { cursor: default; }
+  .schranka { margin-top: 6px; font-size: 13px; }
   .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 </style>
 </head>
@@ -78,6 +81,8 @@
     <label for="fFoto">Fotky</label>
     <div class="fotky" id="fFotky"></div>
     <input id="fFoto" type="file" accept="image/*" multiple>
+    <button type="button" class="schranka" id="btnSchranka">Vložit ze schránky</button>
+    <span class="meta">nebo stiskni Ctrl+V</span>
     <label for="fSloupec">Sloupec</label>
     <select id="fSloupec"></select>
     <div class="dialog-tl">
@@ -148,22 +153,18 @@ async function nacti() {
       const r = await fetch('chyby.json', { cache: 'no-store' });
       if (!r.ok) throw new Error();
       data = await r.json();
-      const lokal = ls.get('chyby_data');
-      if (lokal) data = JSON.parse(lokal);
-      stav('Bez GitHubu – změny jsou jen v tomto prohlížeči. Napoj GitHub, nebo stáhni JSON.');
+      stav('Jen ke čtení. Úpravy dělá autor (Napojit GitHub) nebo Claude přímo v repozitáři.');
     }
   } catch (e) {
-    const lokal = ls.get('chyby_data');
-    if (lokal) data = JSON.parse(lokal);
-    stav('Nepodařilo se načíst chyby.json' + (e.message ? ` (${e.message})` : '') + ' – pracuji s místní kopií.');
+    stav('Nepodařilo se načíst chyby.json' + (e.message ? ` (${e.message})` : '') + '.');
   }
+  document.body.classList.toggle('cteni', !gh().token);
   if (!Array.isArray(data.chyby)) data.chyby = [];
   vykresli();
 }
 
 let casovac = null;
 function uloz() {
-  ls.set('chyby_data', JSON.stringify(data));
   vykresli();
   const { token } = gh();
   if (!token) return;
@@ -211,7 +212,7 @@ function vykresli() {
 
 function box(c) {
   const b = document.createElement('article');
-  b.className = 'box'; b.draggable = true;
+  b.className = 'box'; b.draggable = !!gh().token;
   b.ondragstart = e => e.dataTransfer.setData('text', c.id);
   const h = document.createElement('h3'); h.textContent = c.nazev; b.appendChild(h);
   if (c.popis) { const p = document.createElement('p'); p.textContent = c.popis; b.appendChild(p); }
@@ -297,12 +298,24 @@ function vykresliFotkyForm() {
   });
 }
 
-$('#fFoto').onchange = async e => {
-  const soubory = [...e.target.files]; e.target.value = '';
+$('#fFoto').onchange = e => { const soubory = [...e.target.files]; e.target.value = ''; pridejFotky(soubory); };
+async function pridejFotky(soubory) {
   for (const s of soubory) {
     try { stav('Nahrávám fotku…'); fotkyForm.push(await nahrajFotku(await zmensi(s))); vykresliFotkyForm(); stav('Fotka přidána.'); }
     catch (err) { stav('Fotku se nepodařilo přidat (' + err.message + ').'); }
   }
+}
+$('#dlgBox').addEventListener('paste', e => {
+  const obr = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/'));
+  if (obr.length) { e.preventDefault(); pridejFotky(obr); }
+});
+$('#btnSchranka').onclick = async () => {
+  try {
+    const obr = [];
+    for (const item of await navigator.clipboard.read())
+      for (const t of item.types) if (t.startsWith('image/')) obr.push(await item.getType(t));
+    if (obr.length) pridejFotky(obr); else stav('Ve schránce není obrázek.');
+  } catch { stav('Schránku nejde přečíst – zkus Ctrl+V.'); }
 };
 $('#dlgFoto').onclick = () => $('#dlgFoto').close();
 
