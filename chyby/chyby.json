@@ -247,10 +247,11 @@
     },
     {
       "id": "cmwdsk88p",
-      "text": "doména nemá SPF ani DMARC\n\nCo ty záznamy dělají:\n\nSPF je seznam serverů, které smějí posílat poštu z adres @movitech.cz.\nDMARC říká cizím poštovním serverům, co udělat se zprávou, která kontrolou neprojde: doručit, dát do spamu, nebo odmítnout.\n\nCo hrozí bez nich:\n\nPodvržené e-maily. Kdokoli může poslat zprávu, která se tváří jako od info@movitech.cz. Typicky falešnou fakturu se změněným číslem účtu vašemu zákazníkovi. Jeho poštovní server nemá podle čeho poznat, že je to podvrh.\nVaše pravá pošta padá do spamu. Gmail, Seznam a Outlook berou zprávy z domény bez SPF jako méně důvěryhodné. Týká se to i potvrzení poptávek a objednávek z e-shopu.\n\nOprava je na správci DNS, tedy thinline.cz. Jsou to dva textové záznamy a web se kvůli nim nemění.",
+      "text": "doména nemá SPF ani DMARC\n\nCo ty záznamy dělají:\n\nSPF je seznam serverů, které smějí posílat poštu z adres @movitech.cz.\nDMARC říká cizím poštovním serverům, co udělat se zprávou, která kontrolou neprojde: doručit, dát do spamu, nebo odmítnout.\n\nCo hrozí bez nich:\n\nPodvržené e-maily. Kdokoli může poslat zprávu, která se tváří jako od info@movitech.cz. Typicky falešnou fakturu se změněným číslem účtu vašemu zákazníkovi. Jeho poštovní server nemá podle čeho poznat, že je to podvrh.\nVaše pravá pošta padá do spamu. Gmail, Seznam a Outlook berou zprávy z domény bez SPF jako méně důvěryhodné. Týká se to i potvrzení poptávek a objednávek z e-shopu.",
       "sloupec": "upravit",
       "fotky": [
-        "fotky/mwdsj5y0y77s.jpg"
+        "fotky/mwdsj5y0y77s.jpg",
+        "fotky/mwdslzshld7d.jpg"
       ]
     }
   ]
