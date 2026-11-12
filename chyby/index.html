@@ -65,11 +65,11 @@
   #hledat { flex: 1; min-width: 200px; max-width: 700px; margin: 0 16px; padding: 10px 12px; }
   .sbalit { border: none; background: rgba(255,255,255,.7); font-size: 12px; padding: 2px 8px; margin-left: auto; margin-right: 6px; }
   .sloupec h2 { gap: 6px; }
-  main.hotovo-sbaleno { grid-template-columns: 1fr 1fr 48px; }
+  main { grid-template-columns: var(--sloupce, repeat(3, 1fr)); }
   .sloupec.sbaleny { padding: 12px 6px; cursor: pointer; }
   .sloupec.sbaleny h2 { writing-mode: vertical-rl; flex-direction: row-reverse; justify-content: flex-end; margin: 0 auto; }
   .sloupec.sbaleny h2 .pocet { writing-mode: horizontal-tb; }
-  @media (max-width: 800px) { main.hotovo-sbaleno { grid-template-columns: 1fr; } .sloupec.sbaleny h2 { writing-mode: horizontal-tb; flex-direction: row; } }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } .sloupec.sbaleny h2 { writing-mode: horizontal-tb; flex-direction: row; } }
   .sloupec.sbaleny .box, .sloupec.sbaleny .pridat { display: none; }
   .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 </style>
@@ -240,21 +240,24 @@ async function ulozNaGithub() {
   } catch (e) { stav('Uložení na GitHub selhalo (' + e.message + ').'); }
 }
 
+// Hotovo je ve výchozím stavu sbalené, Závažné rozbalené; volbu si pamatuje prohlížeč
+const jeSbaleny = id => id !== 'upravit' && (ls.get('chyby_sbaleno_' + id) ?? (id === 'hotovo' ? '1' : '0')) === '1';
+
 function vykresli() {
   const t = $('#tabule');
   t.innerHTML = '';
+  t.style.setProperty('--sloupce', SLOUPCE.map(s => jeSbaleny(s.id) ? '48px' : '1fr').join(' '));
   for (const s of SLOUPCE) {
     const dotaz = bezDiakritiky($('#hledat').value.trim());
     const polozky = data.chyby.filter(c => c.sloupec === s.id && (!dotaz || bezDiakritiky(textChyby(c)).includes(dotaz)));
     const el = document.createElement('section');
     el.className = 'sloupec ' + s.id;
     el.innerHTML = `<h2>${s.nazev}<span class="pocet">${polozky.length}</span></h2>`;
-    if (s.id === 'hotovo') {
-      const sb = ls.get('chyby_hotovo_rozbalene') !== '1'; // výchozí stav: sbaleno
+    if (s.id !== 'upravit') {
+      const sb = jeSbaleny(s.id);
       el.classList.toggle('sbaleny', sb);
-      t.classList.toggle('hotovo-sbaleno', sb);
-      const prepni = () => { ls.set('chyby_hotovo_rozbalene', sb ? '1' : null); vykresli(); };
-      if (sb) { el.onclick = prepni; el.title = 'Rozbalit Hotovo'; }
+      const prepni = () => { ls.set('chyby_sbaleno_' + s.id, sb ? '0' : '1'); vykresli(); };
+      if (sb) { el.onclick = prepni; el.title = 'Rozbalit ' + s.nazev; }
       else {
         const x = document.createElement('button'); x.className = 'sbalit'; x.textContent = 'Sbalit »'; x.onclick = prepni;
         el.querySelector('h2 .pocet').before(x);
