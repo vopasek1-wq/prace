@@ -34,6 +34,7 @@
   .box h3 { margin: 0 0 4px; font-size: 15px; }
   .box p { margin: 0 0 6px; white-space: pre-wrap; }
   .box p.text { font-weight: 500; }
+  .box { cursor: pointer; } .box:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
   .box p.text.zkraceny { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .vice { border: none; background: none; padding: 0; margin: 0 0 6px; font-size: 13px; color: var(--muted); text-decoration: underline; }
   .meta { font-size: 12px; color: var(--muted); }
@@ -209,6 +210,11 @@ function vykresli() {
 function box(c) {
   const b = document.createElement('article');
   b.className = 'box';
+  // klik na box: s tokenem otevře úpravu, jinak rozbalí/sbalí text
+  b.onclick = e => {
+    if (e.target.closest('button, img, a')) return;
+    if (gh().token) otevri(c); else b.querySelector('.vice')?.click();
+  };
   const p = document.createElement('p'); p.className = 'text zkraceny'; p.textContent = textChyby(c); b.appendChild(p);
   // dlouhý text zkrátit na 4 řádky s tlačítkem pro rozbalení
   requestAnimationFrame(() => {
