@@ -34,6 +34,7 @@
   .zavazne .box { border-left-color: var(--red); } .upravit .box { border-left-color: var(--orange); } .hotovo .box { border-left-color: var(--green); }
   .box h3 { margin: 0 0 4px; font-size: 15px; }
   .box p { margin: 0 0 6px; white-space: pre-wrap; }
+  .box p.text { font-weight: 500; }
   .meta { font-size: 12px; color: var(--muted); }
   .akce { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .akce button { font-size: 12px; padding: 3px 8px; }
@@ -72,17 +73,15 @@
 <dialog id="dlgBox">
   <form method="dialog" id="formBox">
     <h2 id="dlgNadpis" style="margin:0">Nová chyba</h2>
-    <label for="fNazev">Název</label>
-    <input id="fNazev" required>
-    <label for="fPopis">Popis</label>
-    <textarea id="fPopis"></textarea>
-    <label for="fStranka">Stránka / soubor</label>
-    <input id="fStranka" placeholder="např. web-mobilo/index.html">
+    <label for="fText">Chyba</label>
+    <textarea id="fText" placeholder="Napiš, co je špatně. Fotky vlož přímo sem (Ctrl+V)."></textarea>
     <label for="fFoto">Fotky</label>
     <div class="fotky" id="fFotky"></div>
     <input id="fFoto" type="file" accept="image/*" multiple>
     <button type="button" class="schranka" id="btnSchranka">Vložit ze schránky</button>
     <span class="meta">nebo stiskni Ctrl+V</span>
+    <label for="fStranka">Stránka / soubor</label>
+    <input id="fStranka" placeholder="např. web-mobilo/index.html">
     <label for="fSloupec">Sloupec</label>
     <select id="fSloupec"></select>
     <div class="dialog-tl">
@@ -214,8 +213,7 @@ function box(c) {
   const b = document.createElement('article');
   b.className = 'box'; b.draggable = !!gh().token;
   b.ondragstart = e => e.dataTransfer.setData('text', c.id);
-  const h = document.createElement('h3'); h.textContent = c.nazev; b.appendChild(h);
-  if (c.popis) { const p = document.createElement('p'); p.textContent = c.popis; b.appendChild(p); }
+  const p = document.createElement('p'); p.className = 'text'; p.textContent = textChyby(c); b.appendChild(p);
   if (c.fotky?.length) {
     const f = document.createElement('div'); f.className = 'fotky';
     for (const cesta of c.fotky) f.appendChild(nahled(cesta));
@@ -227,7 +225,7 @@ function box(c) {
   const btn = (txt, fn) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; a.appendChild(x); };
   btn('Upravit', () => otevri(c));
   for (const s of SLOUPCE) if (s.id !== c.sloupec) btn('→ ' + s.nazev, () => presun(c.id, s.id));
-  btn('Smazat', () => { if (confirm(`Smazat „${c.nazev}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } });
+  btn('Smazat', () => { if (confirm(`Smazat „${textChyby(c).slice(0, 60)}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } });
   b.appendChild(a);
   return b;
 }
@@ -319,6 +317,9 @@ $('#btnSchranka').onclick = async () => {
 };
 $('#dlgFoto').onclick = () => $('#dlgFoto').close();
 
+// starší záznamy měly zvlášť nazev a popis
+const textChyby = c => c.text ?? [c.nazev, c.popis].filter(Boolean).join('\n');
+
 function presun(id, sloupec) {
   const c = data.chyby.find(x => x.id === id);
   if (c && c.sloupec !== sloupec) { c.sloupec = sloupec; uloz(); } else vykresli();
@@ -327,8 +328,7 @@ function presun(id, sloupec) {
 function otevri(c, sloupec) {
   upravovane = c ? c.id : null;
   $('#dlgNadpis').textContent = c ? 'Upravit chybu' : 'Nová chyba';
-  $('#fNazev').value = c?.nazev || '';
-  $('#fPopis').value = c?.popis || '';
+  $('#fText').value = c ? textChyby(c) : '';
   $('#fStranka').value = c?.stranka || '';
   $('#fSloupec').value = c?.sloupec || sloupec;
   fotkyForm = [...(c?.fotky || [])];
@@ -340,9 +340,9 @@ $('#fSloupec').innerHTML = SLOUPCE.map(s => `<option value="${s.id}">${s.nazev}<
 
 $('#dlgBox').addEventListener('close', () => {
   if ($('#dlgBox').returnValue !== 'ulozit') return;
-  const hodnoty = { nazev: $('#fNazev').value.trim(), popis: $('#fPopis').value.trim(), stranka: $('#fStranka').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
-  if (!hodnoty.nazev) return;
-  if (upravovane) Object.assign(data.chyby.find(x => x.id === upravovane), hodnoty);
+  const hodnoty = { text: $('#fText').value.trim(), stranka: $('#fStranka').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
+  if (!hodnoty.text && !hodnoty.fotky.length) return;
+  if (upravovane) { const c = data.chyby.find(x => x.id === upravovane); delete c.nazev; delete c.popis; Object.assign(c, hodnoty); }
   else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty, datum: new Date().toISOString().slice(0, 10) });
   uloz();
 });
