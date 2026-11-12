@@ -323,6 +323,14 @@ $('#btnSchranka').onclick = async () => {
     if (obr.length) pridejFotky(obr); else stav('Ve schránce není obrázek.');
   } catch { stav('Schránku nejde přečíst – zkus Ctrl+V.'); }
 };
+// klik mimo okno (na ztmavené pozadí) okno zavře bez uložení
+for (const d of ['#dlgBox', '#dlgGithub']) {
+  $(d).addEventListener('mousedown', e => {
+    if (e.target !== e.currentTarget) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close('zrusit');
+  });
+}
 $('#dlgFoto').onclick = () => $('#dlgFoto').close();
 
 // starší záznamy měly zvlášť nazev a popis
