@@ -28,5 +28,5 @@ Všechna data jsou v **`chyby/chyby.json`**:
 Postup (bez tokenu, Claude pracuje přímo v repozitáři):
 1. Přečti `chyby/chyby.json` a oprav **jen** chyby ve sloupci `zavazne`. Sloupec `upravit` **neopravuj**, ty kontroluje autor ručně. Fotky (cesty relativně ke složce `chyby/`) ukazují problém.
 2. Oprav chybu v souboru uvedeném ve `stranka`.
-3. Přesuň box do hotových: změň `"sloupec"` na `"hotovo"` a na konec `text` krátce dopiš, co se opravilo.
+3. Přesuň box do hotových: změň `"sloupec"` na `"hotovo"`. Text chyby neměň a nic k němu nedopisuj.
 4. Boxy nemaž, to dělá autor. Ve stejném commitu změň `chyby.json` i opravený kód.
