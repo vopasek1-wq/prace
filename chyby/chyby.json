@@ -264,7 +264,7 @@
     },
     {
       "id": "cmwdvfaly",
-      "text": "Kalkulačka pojízdného lešení\n\nNad 3D scénou je prázdný bílý pruh vysoký 145 px. Scéna je o tolik posunutá dolů a přečnívá spodní okraj svého bloku. Děje se to při šířce okna 1024–1199 px, tedy na menších noteboocích a tabletech na šířku. Na mobilu to není, širší okno jsem neměřil.\n\nPříčina: pravidlo v hlavicka-2026.css nastavuje .m3 .scena { top: … !important } od šířky 1024 px. Počítá s tím, že scéna je přilepená (sticky). Do šířky 1199 px je ale scéna position: relative, takže ji stejný údaj posune dolů.\nOprava: to pravidlo omezit až na šířku od 1200 px (min-width: 75em), nebo pod touto šířkou nastavit top: 0.\n\nTlačítka u 3D scény jsou na mobilu nízká, 31–33 px (pohledy, Přehrát stavbu, Kóty). Pro pohodlné ťuknutí prstem se doporučuje aspoň 44 px.",
+      "text": "Kalkulačka pojízdného lešení\n\nNad 3D scénou je prázdný bílý pruh vysoký 145 px. Scéna je o tolik posunutá dolů a přečnívá spodní okraj svého bloku. Děje se to při šířce okna 1024–1199 px, tedy na menších noteboocích a tabletech na šířku. Na mobilu to není, širší okno jsem neměřil.\n\nPříčina: pravidlo v hlavicka-2026.css nastavuje .m3 .scena { top: … !important } od šířky 1024 px. Počítá s tím, že scéna je přilepená (sticky). Do šířky 1199 px je ale scéna position: relative, takže ji stejný údaj posune dolů.\nOprava: to pravidlo omezit až na šířku od 1200 px (min-width: 75em), nebo pod touto šířkou nastavit top: 0.",
       "sloupec": "upravit",
       "fotky": [
         "fotky/mwdvhtfw6hyw.jpg"
