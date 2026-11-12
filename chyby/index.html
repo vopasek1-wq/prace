@@ -60,6 +60,12 @@
   #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
   body.cteni .pridat, body.cteni .akce, body.cteni #btnStahnout { display: none; }
   .schranka { margin-top: 6px; font-size: 13px; }
+  .box a { color: #1a5fb4; word-break: break-all; }
+  #hledat { width: min(320px, 100%); }
+  .sbalit { border: none; background: rgba(255,255,255,.7); font-size: 12px; padding: 2px 8px; margin-left: auto; margin-right: 6px; }
+  .sloupec h2 { gap: 6px; }
+  .sloupec.sbaleny { min-height: 0; align-self: start; }
+  .sloupec.sbaleny .box, .sloupec.sbaleny .pridat { display: none; }
   .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 </style>
 </head>
@@ -69,6 +75,7 @@
     <h1>Nahlášené chyby</h1>
     <div class="stav" id="stav">Načítám…</div>
   </div>
+  <input id="hledat" type="search" placeholder="Hledat v chybách…">
   <div class="tlacitka">
     <button id="btnStahnout" title="Stáhne chyby.json – nahraj ho do repozitáře do složky chyby/">Stáhnout JSON</button>
     <button id="btnGithub">Napojit GitHub</button>
@@ -168,13 +175,16 @@ async function nacti() {
 }
 
 let casovac = null;
+// zápisy na GitHub jdou po jednom, jinak si commity do stejné větve překážejí
+let fronta = Promise.resolve();
+const vFronte = fn => (fronta = fronta.then(fn, fn));
 function uloz() {
   vykresli();
   const { token } = gh();
   if (!token) return;
   clearTimeout(casovac);
   stav('Ukládám…');
-  casovac = setTimeout(ulozNaGithub, 600);
+  casovac = setTimeout(() => vFronte(ulozNaGithub), 600);
 }
 
 async function ulozNaGithub() {
@@ -198,10 +208,18 @@ function vykresli() {
   const t = $('#tabule');
   t.innerHTML = '';
   for (const s of SLOUPCE) {
-    const polozky = data.chyby.filter(c => c.sloupec === s.id);
+    const dotaz = bezDiakritiky($('#hledat').value.trim());
+    const polozky = data.chyby.filter(c => c.sloupec === s.id && (!dotaz || bezDiakritiky(textChyby(c)).includes(dotaz)));
     const el = document.createElement('section');
     el.className = 'sloupec ' + s.id;
     el.innerHTML = `<h2>${s.nazev}<span class="pocet">${polozky.length}</span></h2>`;
+    if (s.id === 'hotovo') {
+      const sb = ls.get('chyby_hotovo_sbalene') === '1';
+      el.classList.toggle('sbaleny', sb);
+      const x = document.createElement('button'); x.className = 'sbalit'; x.textContent = sb ? 'Rozbalit' : 'Sbalit';
+      x.onclick = () => { ls.set('chyby_hotovo_sbalene', sb ? null : '1'); vykresli(); };
+      el.querySelector('h2 .pocet').before(x);
+    }
     for (const c of polozky) el.appendChild(box(c));
     const p = document.createElement('button');
     p.className = 'pridat'; p.textContent = '+ Přidat';
@@ -219,7 +237,7 @@ function box(c) {
     if (e.target.closest('button, img, a')) return;
     if (gh().token) otevri(c); else b.querySelector('.vice')?.click();
   };
-  const p = document.createElement('p'); p.className = 'text zkraceny'; p.textContent = textChyby(c); b.appendChild(p);
+  const p = document.createElement('p'); p.className = 'text zkraceny'; vlozTextSOdkazy(p, textChyby(c)); b.appendChild(p);
   // dlouhý text zkrátit na 4 řádky s tlačítkem pro rozbalení
   requestAnimationFrame(() => {
     if (p.scrollHeight <= p.clientHeight + 2) { p.classList.remove('zkraceny'); return; }
@@ -238,7 +256,7 @@ function box(c) {
   const btn = (txt, fn, cls) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; if (cls) x.className = cls; a.appendChild(x); };
   btn('Upravit', () => otevri(c));
   for (const s of SLOUPCE) if (s.id !== c.sloupec) btn('→ ' + s.nazev, () => presun(c.id, s.id), 'b-' + s.id);
-  btn('Smazat', () => { if (confirm(`Smazat „${textChyby(c).slice(0, 60)}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } }, 'b-smazat');
+  btn('Smazat', () => { if (confirm(`Smazat „${textChyby(c).slice(0, 60)}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); smazFotky(c.fotky || []); } }, 'b-smazat');
   b.appendChild(a);
   return b;
 }
@@ -284,7 +302,8 @@ function zmensi(soubor) {
 }
 
 // s napojeným GitHubem nahraje fotku do chyby/fotky/, jinak ji nechá vloženou v datech
-async function nahrajFotku(dataUrl) {
+function nahrajFotku(dataUrl) {
+  return vFronte(async () => {
   const { token, vetev } = gh();
   if (!token) return dataUrl;
   const cesta = `fotky/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}.jpg`;
@@ -296,6 +315,7 @@ async function nahrajFotku(dataUrl) {
   if (!r.ok) throw new Error('nahrání fotky ' + r.status);
   cacheFotek[cesta] = dataUrl;
   return cesta;
+  });
 }
 
 function vykresliFotkyForm() {
@@ -336,7 +356,43 @@ for (const d of ['#dlgBox', '#dlgGithub']) {
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close('zrusit');
   });
 }
+$('#hledat').oninput = () => vykresli();
 $('#dlgFoto').onclick = () => $('#dlgFoto').close();
+
+let fotkyPuvodni = [];
+
+const bezDiakritiky = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+// text s klikacími odkazy (bez innerHTML, ať text nemůže vložit HTML)
+function vlozTextSOdkazy(el, text) {
+  const re = /https?:\/\/[^\s<>"“”„]+[^\s<>"“”„.,;:!?)\]]/g;
+  let i = 0, m;
+  while ((m = re.exec(text))) {
+    el.append(text.slice(i, m.index));
+    const a = document.createElement('a'); a.href = m[0]; a.textContent = m[0]; a.target = '_blank'; a.rel = 'noopener';
+    el.append(a); i = m.index + m[0].length;
+  }
+  el.append(text.slice(i));
+}
+
+// smaže soubory fotek z GitHubu (vložené data: URL nic nemaže)
+function smazFotky(cesty) {
+  const { token, vetev } = gh();
+  if (!token || !cesty.length) return;
+  return vFronte(async () => {
+  for (const cesta of cesty) {
+    if (cesta.startsWith('data:') || data.chyby.some(c => c.fotky?.includes(cesta))) continue;
+    try {
+      const url = `https://api.github.com/repos/${REPO}/contents/chyby/${cesta}`;
+      const h = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' };
+      const r = await fetch(url + `?ref=${encodeURIComponent(vetev)}`, { headers: h });
+      if (!r.ok) continue;
+      const { sha } = await r.json();
+      await fetch(url, { method: 'DELETE', headers: h, body: JSON.stringify({ message: 'Chyby: smazat fotku', sha, branch: vetev }) });
+    } catch {}
+  }
+  });
+}
 
 // starší záznamy měly zvlášť nazev a popis
 const textChyby = c => c.text ?? [c.nazev, c.popis].filter(Boolean).join('\n');
@@ -352,16 +408,21 @@ function otevri(c, sloupec) {
   $('#fText').value = c ? textChyby(c) : '';
   $('#fSloupec').value = c?.sloupec || sloupec;
   fotkyForm = [...(c?.fotky || [])];
+  fotkyPuvodni = [...fotkyForm];
   vykresliFotkyForm();
+  $('#dlgBox').returnValue = '';
   $('#dlgBox').showModal();
 }
 
 $('#fSloupec').innerHTML = SLOUPCE.map(s => `<option value="${s.id}">${s.nazev}</option>`).join('');
 
 $('#dlgBox').addEventListener('close', () => {
-  if ($('#dlgBox').returnValue !== 'ulozit') return;
   const hodnoty = { text: $('#fText').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
-  if (!hodnoty.text && !hodnoty.fotky.length) return;
+  if ($('#dlgBox').returnValue !== 'ulozit' || (!hodnoty.text && !hodnoty.fotky.length)) {
+    smazFotky(fotkyForm.filter(f => !fotkyPuvodni.includes(f))); // nově nahrané, ale neuložené
+    return;
+  }
+  smazFotky(fotkyPuvodni.filter(f => !fotkyForm.includes(f)));  // odebrané z boxu
   if (upravovane) { const c = data.chyby.find(x => x.id === upravovane); delete c.nazev; delete c.popis; Object.assign(c, hodnoty); }
   else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty });
   uloz();
