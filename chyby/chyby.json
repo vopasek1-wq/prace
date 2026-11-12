@@ -230,6 +230,12 @@
       "text": "náhled při sdílení a strukturovaná data\n\nObrázek pro sdílení (og:image) chybí na 172 stránkách. Když někdo pošle odkaz přes WhatsApp, Messenger nebo ho dá na Facebook, ukáže se jen text bez obrázku.\n\n160 obsahových stránek. Patří sem i ty nejdůležitější: /pujcovna-leseni, /prodej-leseni, /pouzite-leseni, /ramove-leseni, /modulove-leseni, /pojizdne-leseni, /ringscaff, /rux-super, /framescaff-73, /mobilo, /levne-leseni, /kontakt, /reference, /scafom-rux.",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdsanzb",
+      "text": "Strukturovaná data (popis stránky pro vyhledávače) nemá 147 obsahových stránek vůbec. Na celém webu jsem našel:\n\nCo z toho má smysl řešit:\n\nObrázek pro sdílení doplnit do šablony obsahových stránek. Vzít hlavní fotku stránky, a kde není, jeden výchozí obrázek s logem.\nStránky, které mají na konci „Časté dotazy“, ale nemají FAQPage (například /kolik-stoji-pujcit-leseni, /financovani-leseni-92), můžou stejná data dostat také.\nProduct u produktů bych neřešil. Google u něj vyžaduje cenu nebo hodnocení a vy máte „Cena na dotaz“, takže by se ve výsledcích nic navíc neukázalo.",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
