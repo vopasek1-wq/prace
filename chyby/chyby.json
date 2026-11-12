@@ -149,6 +149,15 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdnsnhi",
+      "text": "Objednat -  Máte preferovanou dopravu? nejde rozkliknout",
+      "stranka": "",
+      "sloupec": "zavazne",
+      "fotky": [
+        "fotky/mwdnsijgrvdw.jpg"
+      ]
     }
   ]
 }
