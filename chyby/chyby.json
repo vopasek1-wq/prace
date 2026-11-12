@@ -77,6 +77,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdmav66",
+      "text": "Staré odkazy s http://: v patičce každé stránky je odkaz na http://www.giant.cz. Několik interních odkazů vede na http://movitech.cz/… (/ringscaff, /duralok-70, /multi-roof-37). Obrázky na /alu-rasant-35 a v článku o průlezech se načítají přes http. Prohlížeč si poradí, ale stojí to přesměrování navíc.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
