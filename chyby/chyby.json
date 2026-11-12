@@ -6,7 +6,10 @@
       "popis": "hghggh",
       "stranka": "",
       "sloupec": "upravit",
-      "fotky": [],
+      "fotky": [
+        "fotky/mwdlayegujnu.jpg",
+        "fotky/mwdlaznekbu7.jpg"
+      ],
       "datum": "2026-11-12"
     }
   ]
