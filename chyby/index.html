@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nahlášené chyby</title>
+<style>
+  :root {
+    --bg: #f6f6f4; --text: #1d1d1b; --muted: #6b6b66; --card: #ffffff; --line: #e2e2dc;
+    --red-bg: #fde8e8; --red: #c62828;
+    --orange-bg: #fff1e0; --orange: #d9730d;
+    --green-bg: #e6f4ea; --green: #2e7d32;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+  header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 16px; }
+  h1 { margin: 0; font-size: 20px; }
+  .stav { font-size: 13px; color: var(--muted); }
+  .tlacitka { display: flex; gap: 8px; flex-wrap: wrap; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: #b9b9b0; }
+  button.hlavni { background: var(--text); color: #fff; border-color: var(--text); }
+  main { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 16px 24px; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+  .sloupec { border-radius: 12px; padding: 12px; min-height: 200px; transition: outline .1s; }
+  .sloupec.cil { outline: 2px dashed var(--muted); }
+  .zavazne { background: var(--red-bg); }
+  .upravit { background: var(--orange-bg); }
+  .hotovo  { background: var(--green-bg); }
+  .sloupec h2 { margin: 0 0 10px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .zavazne h2 { color: var(--red); } .upravit h2 { color: var(--orange); } .hotovo h2 { color: var(--green); }
+  .pocet { font-size: 13px; font-weight: 600; background: rgba(255,255,255,.7); border-radius: 99px; padding: 1px 9px; }
+  .box { background: var(--card); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,.08); cursor: grab; border-left: 4px solid; }
+  .zavazne .box { border-left-color: var(--red); } .upravit .box { border-left-color: var(--orange); } .hotovo .box { border-left-color: var(--green); }
+  .box h3 { margin: 0 0 4px; font-size: 15px; }
+  .box p { margin: 0 0 6px; white-space: pre-wrap; }
+  .meta { font-size: 12px; color: var(--muted); }
+  .akce { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .akce button { font-size: 12px; padding: 3px 8px; }
+  .pridat { width: 100%; background: rgba(255,255,255,.6); border-style: dashed; }
+  dialog { border: none; border-radius: 12px; padding: 20px; width: min(460px, calc(100vw - 32px)); }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  input, textarea, select { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
+  textarea { min-height: 90px; resize: vertical; }
+  .fotky { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
+  .fotky img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; cursor: zoom-in; background: var(--line); }
+  .fotky-edit { position: relative; display: inline-block; }
+  .fotky-edit button { position: absolute; top: -6px; right: -6px; padding: 0 6px; font-size: 12px; border-radius: 99px; }
+  #dlgFoto { padding: 0; background: transparent; width: auto; max-width: 95vw; }
+  #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
+  .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Nahlášené chyby</h1>
+    <div class="stav" id="stav">Načítám…</div>
+  </div>
+  <div class="tlacitka">
+    <button id="btnStahnout" title="Stáhne chyby.json – nahraj ho do repozitáře do složky chyby/">Stáhnout JSON</button>
+    <button id="btnGithub">Napojit GitHub</button>
+  </div>
+</header>
+
+<main id="tabule"></main>
+
+<dialog id="dlgBox">
+  <form method="dialog" id="formBox">
+    <h2 id="dlgNadpis" style="margin:0">Nová chyba</h2>
+    <label for="fNazev">Název</label>
+    <input id="fNazev" required>
+    <label for="fPopis">Popis</label>
+    <textarea id="fPopis"></textarea>
+    <label for="fStranka">Stránka / soubor</label>
+    <input id="fStranka" placeholder="např. web-mobilo/index.html">
+    <label for="fFoto">Fotky</label>
+    <div class="fotky" id="fFotky"></div>
+    <input id="fFoto" type="file" accept="image/*" multiple>
+    <label for="fSloupec">Sloupec</label>
+    <select id="fSloupec"></select>
+    <div class="dialog-tl">
+      <button value="zrusit" formnovalidate>Zrušit</button>
+      <button value="ulozit" class="hlavni">Uložit</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgFoto"><img id="velkaFoto" alt="Fotka chyby"></dialog>
+
+<dialog id="dlgGithub">
+  <form method="dialog" id="formGithub">
+    <h2 style="margin:0">Napojit GitHub</h2>
+    <p class="meta">Změny se pak ukládají rovnou do <code>chyby/chyby.json</code> v repozitáři. Token zůstane jen v tomto prohlížeči.
+      Vytvoř ho na github.com → Settings → Developer settings → Fine-grained tokens, s právem <b>Contents: Read and write</b> pro repozitář <b>prace</b>.</p>
+    <label for="gToken">Token</label>
+    <input id="gToken" type="password" autocomplete="off">
+    <label for="gVetev">Větev</label>
+    <input id="gVetev" value="main">
+    <div class="dialog-tl">
+      <button value="odpojit" formnovalidate>Odpojit</button>
+      <button value="zrusit" formnovalidate>Zrušit</button>
+      <button value="ulozit" class="hlavni">Uložit</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const REPO = 'vopasek1-wq/prace';
+const CESTA = 'chyby/chyby.json';
+const SLOUPCE = [
+  { id: 'zavazne', nazev: 'Závažné chyby' },
+  { id: 'upravit', nazev: 'K úpravě' },
+  { id: 'hotovo',  nazev: 'Hotovo' }
+];
+
+let data = { chyby: [] };
+let sha = null;          // verze souboru na GitHubu
+let upravovane = null;   // id upravovaného boxu
+let fotkyForm = [];      // fotky v otevřeném formuláři
+const cacheFotek = {};   // cesta -> blob URL (u soukromého repozitáře přes API)
+
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} }
+};
+const gh = () => ({ token: ls.get('chyby_token'), vetev: ls.get('chyby_vetev') || 'main' });
+const $ = s => document.querySelector(s);
+const stav = t => { $('#stav').textContent = t; };
+
+// --- base64 s diakritikou ---
+const naB64 = s => btoa(String.fromCharCode(...new TextEncoder().encode(s)));
+const zB64 = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, '')), c => c.charCodeAt(0)));
+
+async function nacti() {
+  const { token, vetev } = gh();
+  try {
+    if (token) {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${CESTA}?ref=${encodeURIComponent(vetev)}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } });
+      if (!r.ok) throw new Error('GitHub ' + r.status);
+      const j = await r.json();
+      sha = j.sha;
+      data = JSON.parse(zB64(j.content));
+      stav(`Napojeno na GitHub (${vetev}) – změny se ukládají automaticky.`);
+    } else {
+      const r = await fetch('chyby.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error();
+      data = await r.json();
+      const lokal = ls.get('chyby_data');
+      if (lokal) data = JSON.parse(lokal);
+      stav('Bez GitHubu – změny jsou jen v tomto prohlížeči. Napoj GitHub, nebo stáhni JSON.');
+    }
+  } catch (e) {
+    const lokal = ls.get('chyby_data');
+    if (lokal) data = JSON.parse(lokal);
+    stav('Nepodařilo se načíst chyby.json' + (e.message ? ` (${e.message})` : '') + ' – pracuji s místní kopií.');
+  }
+  if (!Array.isArray(data.chyby)) data.chyby = [];
+  vykresli();
+}
+
+let casovac = null;
+function uloz() {
+  ls.set('chyby_data', JSON.stringify(data));
+  vykresli();
+  const { token } = gh();
+  if (!token) return;
+  clearTimeout(casovac);
+  stav('Ukládám…');
+  casovac = setTimeout(ulozNaGithub, 600);
+}
+
+async function ulozNaGithub() {
+  const { token, vetev } = gh();
+  const telo = { message: 'Chyby: aktualizace z tabule', content: naB64(JSON.stringify(data, null, 2) + '\n'), branch: vetev };
+  if (sha) telo.sha = sha;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${CESTA}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+      body: JSON.stringify(telo)
+    });
+    if (r.status === 409 || r.status === 422) { stav('Soubor mezitím změnil někdo jiný – načítám znovu.'); return nacti(); }
+    if (!r.ok) throw new Error(r.status);
+    sha = (await r.json()).content.sha;
+    stav(`Uloženo na GitHub ${new Date().toLocaleTimeString('cs-CZ')}`);
+  } catch (e) { stav('Uložení na GitHub selhalo (' + e.message + ').'); }
+}
+
+function vykresli() {
+  const t = $('#tabule');
+  t.innerHTML = '';
+  for (const s of SLOUPCE) {
+    const polozky = data.chyby.filter(c => c.sloupec === s.id);
+    const el = document.createElement('section');
+    el.className = 'sloupec ' + s.id;
+    el.innerHTML = `<h2>${s.nazev}<span class="pocet">${polozky.length}</span></h2>`;
+    for (const c of polozky) el.appendChild(box(c));
+    const p = document.createElement('button');
+    p.className = 'pridat'; p.textContent = '+ Přidat';
+    p.onclick = () => otevri(null, s.id);
+    el.appendChild(p);
+    el.ondragover = e => { e.preventDefault(); el.classList.add('cil'); };
+    el.ondragleave = () => el.classList.remove('cil');
+    el.ondrop = e => { e.preventDefault(); presun(e.dataTransfer.getData('text'), s.id); };
+    t.appendChild(el);
+  }
+}
+
+function box(c) {
+  const b = document.createElement('article');
+  b.className = 'box'; b.draggable = true;
+  b.ondragstart = e => e.dataTransfer.setData('text', c.id);
+  const h = document.createElement('h3'); h.textContent = c.nazev; b.appendChild(h);
+  if (c.popis) { const p = document.createElement('p'); p.textContent = c.popis; b.appendChild(p); }
+  if (c.fotky?.length) {
+    const f = document.createElement('div'); f.className = 'fotky';
+    for (const cesta of c.fotky) f.appendChild(nahled(cesta));
+    b.appendChild(f);
+  }
+  const m = document.createElement('div'); m.className = 'meta';
+  m.textContent = [c.stranka, c.datum].filter(Boolean).join(' · '); b.appendChild(m);
+  const a = document.createElement('div'); a.className = 'akce';
+  const btn = (txt, fn) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; a.appendChild(x); };
+  btn('Upravit', () => otevri(c));
+  for (const s of SLOUPCE) if (s.id !== c.sloupec) btn('→ ' + s.nazev, () => presun(c.id, s.id));
+  btn('Smazat', () => { if (confirm(`Smazat „${c.nazev}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } });
+  b.appendChild(a);
+  return b;
+}
+
+// --- fotky ---
+function nahled(cesta) {
+  const img = document.createElement('img');
+  img.alt = 'Fotka chyby'; img.loading = 'lazy';
+  urlFotky(cesta).then(u => { img.src = u; });
+  img.onclick = e => { e.stopPropagation(); $('#velkaFoto').src = img.src; $('#dlgFoto').showModal(); };
+  return img;
+}
+
+async function urlFotky(cesta) {
+  if (cesta.startsWith('data:')) return cesta;
+  if (cacheFotek[cesta]) return cacheFotek[cesta];
+  const { token, vetev } = gh();
+  if (token) {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/chyby/${cesta}?ref=${encodeURIComponent(vetev)}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.raw' } });
+      if (r.ok) return cacheFotek[cesta] = URL.createObjectURL(await r.blob());
+    } catch {}
+  }
+  return cesta; // relativní cesta (GitHub Pages / lokální server)
+}
+
+// zmenší fotku na max. 1600 px a převede na JPEG
+function zmensi(soubor) {
+  return new Promise((ok, chyba) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1600 / Math.max(img.width, img.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(img.src);
+      ok(cv.toDataURL('image/jpeg', 0.82));
+    };
+    img.onerror = chyba;
+    img.src = URL.createObjectURL(soubor);
+  });
+}
+
+// s napojeným GitHubem nahraje fotku do chyby/fotky/, jinak ji nechá vloženou v datech
+async function nahrajFotku(dataUrl) {
+  const { token, vetev } = gh();
+  if (!token) return dataUrl;
+  const cesta = `fotky/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}.jpg`;
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/chyby/${cesta}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+    body: JSON.stringify({ message: 'Chyby: nová fotka', content: dataUrl.split(',')[1], branch: vetev })
+  });
+  if (!r.ok) throw new Error('nahrání fotky ' + r.status);
+  cacheFotek[cesta] = dataUrl;
+  return cesta;
+}
+
+function vykresliFotkyForm() {
+  const f = $('#fFotky'); f.innerHTML = '';
+  fotkyForm.forEach((cesta, i) => {
+    const w = document.createElement('span'); w.className = 'fotky-edit';
+    w.appendChild(nahled(cesta));
+    const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.title = 'Odebrat fotku';
+    x.onclick = () => { fotkyForm.splice(i, 1); vykresliFotkyForm(); };
+    w.appendChild(x); f.appendChild(w);
+  });
+}
+
+$('#fFoto').onchange = async e => {
+  const soubory = [...e.target.files]; e.target.value = '';
+  for (const s of soubory) {
+    try { stav('Nahrávám fotku…'); fotkyForm.push(await nahrajFotku(await zmensi(s))); vykresliFotkyForm(); stav('Fotka přidána.'); }
+    catch (err) { stav('Fotku se nepodařilo přidat (' + err.message + ').'); }
+  }
+};
+$('#dlgFoto').onclick = () => $('#dlgFoto').close();
+
+function presun(id, sloupec) {
+  const c = data.chyby.find(x => x.id === id);
+  if (c && c.sloupec !== sloupec) { c.sloupec = sloupec; uloz(); } else vykresli();
+}
+
+function otevri(c, sloupec) {
+  upravovane = c ? c.id : null;
+  $('#dlgNadpis').textContent = c ? 'Upravit chybu' : 'Nová chyba';
+  $('#fNazev').value = c?.nazev || '';
+  $('#fPopis').value = c?.popis || '';
+  $('#fStranka').value = c?.stranka || '';
+  $('#fSloupec').value = c?.sloupec || sloupec;
+  fotkyForm = [...(c?.fotky || [])];
+  vykresliFotkyForm();
+  $('#dlgBox').showModal();
+}
+
+$('#fSloupec').innerHTML = SLOUPCE.map(s => `<option value="${s.id}">${s.nazev}</option>`).join('');
+
+$('#dlgBox').addEventListener('close', () => {
+  if ($('#dlgBox').returnValue !== 'ulozit') return;
+  const hodnoty = { nazev: $('#fNazev').value.trim(), popis: $('#fPopis').value.trim(), stranka: $('#fStranka').value.trim(), sloupec: $('#fSloupec').value, fotky: [...fotkyForm] };
+  if (!hodnoty.nazev) return;
+  if (upravovane) Object.assign(data.chyby.find(x => x.id === upravovane), hodnoty);
+  else data.chyby.push({ id: 'c' + Date.now().toString(36), ...hodnoty, datum: new Date().toISOString().slice(0, 10) });
+  uloz();
+});
+
+$('#btnGithub').onclick = () => { const g = gh(); $('#gToken').value = g.token || ''; $('#gVetev').value = g.vetev; $('#dlgGithub').showModal(); };
+$('#dlgGithub').addEventListener('close', () => {
+  const v = $('#dlgGithub').returnValue;
+  if (v === 'odpojit') { ls.set('chyby_token', null); sha = null; nacti(); }
+  if (v === 'ulozit') { ls.set('chyby_token', $('#gToken').value.trim() || null); ls.set('chyby_vetev', $('#gVetev').value.trim() || 'main'); nacti(); }
+});
+
+$('#btnStahnout').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' }));
+  a.download = 'chyby.json'; a.click();
+};
+
+nacti();
+</script>
+</body>
+</html>
