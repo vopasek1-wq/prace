@@ -65,7 +65,11 @@
   #hledat { flex: 1; min-width: 200px; max-width: 700px; margin: 0 16px; padding: 10px 12px; }
   .sbalit { border: none; background: rgba(255,255,255,.7); font-size: 12px; padding: 2px 8px; margin-left: auto; margin-right: 6px; }
   .sloupec h2 { gap: 6px; }
-  .sloupec.sbaleny { min-height: 0; align-self: start; }
+  main.hotovo-sbaleno { grid-template-columns: 1fr 1fr 48px; }
+  .sloupec.sbaleny { padding: 12px 6px; cursor: pointer; }
+  .sloupec.sbaleny h2 { writing-mode: vertical-rl; flex-direction: row-reverse; justify-content: flex-end; margin: 0 auto; }
+  .sloupec.sbaleny h2 .pocet { writing-mode: horizontal-tb; }
+  @media (max-width: 800px) { main.hotovo-sbaleno { grid-template-columns: 1fr; } .sloupec.sbaleny h2 { writing-mode: horizontal-tb; flex-direction: row; } }
   .sloupec.sbaleny .box, .sloupec.sbaleny .pridat { display: none; }
   .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 </style>
@@ -218,9 +222,13 @@ function vykresli() {
     if (s.id === 'hotovo') {
       const sb = ls.get('chyby_hotovo_sbalene') === '1';
       el.classList.toggle('sbaleny', sb);
-      const x = document.createElement('button'); x.className = 'sbalit'; x.textContent = sb ? 'Rozbalit' : 'Sbalit';
-      x.onclick = () => { ls.set('chyby_hotovo_sbalene', sb ? null : '1'); vykresli(); };
-      el.querySelector('h2 .pocet').before(x);
+      t.classList.toggle('hotovo-sbaleno', sb);
+      const prepni = () => { ls.set('chyby_hotovo_sbalene', sb ? null : '1'); vykresli(); };
+      if (sb) { el.onclick = prepni; el.title = 'Rozbalit Hotovo'; }
+      else {
+        const x = document.createElement('button'); x.className = 'sbalit'; x.textContent = 'Sbalit »'; x.onclick = prepni;
+        el.querySelector('h2 .pocet').before(x);
+      }
     }
     for (const c of polozky) el.appendChild(box(c));
     const p = document.createElement('button');
