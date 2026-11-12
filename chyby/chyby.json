@@ -100,6 +100,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdmh2dz",
+      "text": "obrázek s prázdnou adresou\n\nTady jsem to v souhrnu podal hůř, než to je. Žádná fotka v článku nechybí. Jde o pomocný prvek pro zvětšování fotek na konci článku /srovnani-prulezu-framescaff-vs-layher-detaily-ktere-rozhoduji:\n\n<div class=\"lightbox-overlay\" id=\"lightbox\" onclick=\"closeLightbox()\">\n  <img alt=\"Zvětšený obrázek\" id=\"lightbox-img\" src=\"\">\n</div>\n\nAdresa se do něj doplní až po kliknutí na fotku, takže zákazník nic rozbitého nevidí. Jediná vada je technická: prázdné src=\"\" některé prohlížeče vyhodnotí jako adresu stránky samotné a zbytečně si ji stáhnou podruhé. Stačí atribut src z té značky úplně vypustit.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
