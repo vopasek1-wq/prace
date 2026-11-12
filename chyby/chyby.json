@@ -1,28 +1,3 @@
 {
-  "chyby": [
-    {
-      "id": "c1",
-      "sloupec": "zavazne",
-      "nazev": "Ukázka: rozbitá navigace na mobilu",
-      "popis": "Po kliknutí na menu se nezavře. (Ukázkový box – smaž ho.)",
-      "stranka": "web-mobilo/index.html",
-      "datum": "2026-11-12"
-    },
-    {
-      "id": "c2",
-      "sloupec": "upravit",
-      "nazev": "Ukázka: větší písmo v patičce",
-      "popis": "Text v patičce je na telefonu moc malý.",
-      "stranka": "web-mobilo/index.html",
-      "datum": "2026-11-12"
-    },
-    {
-      "id": "c3",
-      "sloupec": "hotovo",
-      "nazev": "Ukázka: překlep v nadpisu",
-      "popis": "Opraveno.",
-      "stranka": "web-mobilo/index-foto.html",
-      "datum": "2026-11-12"
-    }
-  ]
+  "chyby": []
 }
