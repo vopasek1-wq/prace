@@ -142,6 +142,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdnqjmv",
+      "text": "Cizí web může objednat za zákazníka.\nOdkaz nemá žádný bezpečnostní kód. Stačí, aby zákazník s rozpracovaným košíkem otevřel jinou stránku nebo e-mail, kde je ta adresa schovaná třeba jako obrázek. Prohlížeč ji načte s jeho přihlášením a objednávka odejde jeho jménem. Zneužít to může konkurence nebo vtipálek k zahlcení falešnými objednávkami od skutečných zákazníků.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
