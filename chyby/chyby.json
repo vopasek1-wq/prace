@@ -1,3 +1,14 @@
 {
-  "chyby": []
+  "chyby": [
+    {
+      "id": "cmwdlnk4c",
+      "text": "Cookie lišta nemá na první obrazovce „Odmítnout“. Jsou tam jen „Souhlasím“ a „Nastavení preferencí“ a odmítnutí stojí dva kliky navíc. Podle výkladu ÚOOÚ má být odmítnutí stejně snadné jako souhlas.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": [
+        "fotky/mwdlnfotrmsq.jpg"
+      ],
+      "datum": "2026-11-12"
+    }
+  ]
 }
