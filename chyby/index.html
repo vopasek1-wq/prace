@@ -40,6 +40,11 @@
   .meta { font-size: 12px; color: var(--muted); }
   .akce { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .akce button { font-size: 12px; padding: 3px 8px; }
+  .akce .b-zavazne { background: var(--red-bg); color: var(--red); border-color: #f3b9b9; }
+  .akce .b-upravit { background: var(--orange-bg); color: var(--orange); border-color: #f5cf9f; }
+  .akce .b-hotovo  { background: var(--green-bg); color: var(--green); border-color: #a9d6b5; }
+  .akce .b-smazat  { color: var(--muted); margin-left: auto; }
+  .akce .b-smazat:hover { color: var(--red); border-color: var(--red); }
   .pridat { width: 100%; background: rgba(255,255,255,.6); border-style: dashed; }
   dialog { border: none; border-radius: 12px; padding: 20px; width: min(1000px, calc(100vw - 32px)); }
   dialog::backdrop { background: rgba(0,0,0,.35); }
@@ -230,10 +235,10 @@ function box(c) {
   const m = document.createElement('div'); m.className = 'meta';
   if (c.stranka) { m.textContent = c.stranka; b.appendChild(m); }
   const a = document.createElement('div'); a.className = 'akce';
-  const btn = (txt, fn) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; a.appendChild(x); };
+  const btn = (txt, fn, cls) => { const x = document.createElement('button'); x.textContent = txt; x.onclick = fn; if (cls) x.className = cls; a.appendChild(x); };
   btn('Upravit', () => otevri(c));
-  for (const s of SLOUPCE) if (s.id !== c.sloupec) btn('→ ' + s.nazev, () => presun(c.id, s.id));
-  btn('Smazat', () => { if (confirm(`Smazat „${textChyby(c).slice(0, 60)}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } });
+  for (const s of SLOUPCE) if (s.id !== c.sloupec) btn('→ ' + s.nazev, () => presun(c.id, s.id), 'b-' + s.id);
+  btn('Smazat', () => { if (confirm(`Smazat „${textChyby(c).slice(0, 60)}“?`)) { data.chyby = data.chyby.filter(x => x.id !== c.id); uloz(); } }, 'b-smazat');
   b.appendChild(a);
   return b;
 }
