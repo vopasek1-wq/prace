@@ -180,6 +180,12 @@
       "fotky": [
         "fotky/mwdp59shcmis.jpg"
       ]
+    },
+    {
+      "id": "cmwdqmzup",
+      "text": "Košík – chybí volba „Odkud znáte ceny?“\n\nPostup: v košíku zvolím „Objednat“, nevyberu žádný zdroj cen a kliknu na „Pokračovat k údajům“.\n\nCo se stane:\n\nPod poslední možností se objeví „Vyberte jednu z možností“.\nHláška začíná 765 px od horního okraje okna, tedy 3 px nad spodním okrajem. Vidět z ní není nic.\nStránka se posune jen o 19 px, k hlášce nedojede.",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
