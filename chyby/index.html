@@ -34,6 +34,8 @@
   .box h3 { margin: 0 0 4px; font-size: 15px; }
   .box p { margin: 0 0 6px; white-space: pre-wrap; }
   .box p.text { font-weight: 500; }
+  .box p.text.zkraceny { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .vice { border: none; background: none; padding: 0; margin: 0 0 6px; font-size: 13px; color: var(--muted); text-decoration: underline; }
   .meta { font-size: 12px; color: var(--muted); }
   .akce { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .akce button { font-size: 12px; padding: 3px 8px; }
@@ -207,7 +209,14 @@ function vykresli() {
 function box(c) {
   const b = document.createElement('article');
   b.className = 'box';
-  const p = document.createElement('p'); p.className = 'text'; p.textContent = textChyby(c); b.appendChild(p);
+  const p = document.createElement('p'); p.className = 'text zkraceny'; p.textContent = textChyby(c); b.appendChild(p);
+  // dlouhý text zkrátit na 4 řádky s tlačítkem pro rozbalení
+  requestAnimationFrame(() => {
+    if (p.scrollHeight <= p.clientHeight + 2) { p.classList.remove('zkraceny'); return; }
+    const v = document.createElement('button'); v.className = 'vice'; v.textContent = 'Zobrazit celé';
+    v.onclick = () => { const z = p.classList.toggle('zkraceny'); v.textContent = z ? 'Zobrazit celé' : 'Sbalit'; };
+    p.after(v);
+  });
   if (c.fotky?.length) {
     const f = document.createElement('div'); f.className = 'fotky';
     for (const cesta of c.fotky) f.appendChild(nahled(cesta));
