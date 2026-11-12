@@ -172,6 +172,14 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdp6mc0",
+      "text": "po načtení z ARES zůstávají staré chyby\n\nKlikl jsem na „Pokračovat ke shrnutí“ s prázdným formulářem. Pod povinnými poli se objevily červené hlášky, mimo jiné „Zadejte ulici“ a „Zadejte město“.\nVyplnil jsem IČO a klikl na „Načíst z ARES“. Ulice, město, PSČ, název firmy a DIČ se správně doplnily.\nHlášky „Zadejte ulici“ a „Zadejte město“ ale pod vyplněnými poli svítily dál, i s červeným rámečkem.\n\nProč se to děje\nHláška u pole zmizí, když do něj zákazník sám něco napíše. Tlačítko ARES ale hodnoty vloží programově a formulář se o změně nedozví, takže kontrola neproběhne znovu a stará chyba zůstane viset.\n\nCo to znamená pro zákazníka\n\nVidí vyplněnou adresu a pod ní „Zadejte ulici“. Neví, jestli je údaj špatně, nebo jestli se dá pokračovat.\nFormulář přitom pokračovat dovolí, odeslání to neblokuje. Je to jen matoucí, ne nefunkční.\nNastane to jen tomu, kdo nejdřív zkusil pokračovat s prázdnými poli a ARES použil až potom. Kdo začne ARESem, chybu neuvidí.",
+      "sloupec": "upravit",
+      "fotky": [
+        "fotky/mwdp59shcmis.jpg"
+      ]
     }
   ]
 }
