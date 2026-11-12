@@ -255,6 +255,12 @@
         "fotky/mwdsj5y0y77s.jpg",
         "fotky/mwdslzshld7d.jpg"
       ]
+    },
+    {
+      "id": "cmwdt9n5m",
+      "text": "Automatické popisky jsou slepené bez mezery, například „…kdy je potřebaStatický posudek lešení je…“. Týká se pojmových stránek (posudek, plachty, termoplachty, trubky, oplocení, kurz).",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
