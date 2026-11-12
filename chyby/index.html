@@ -23,14 +23,13 @@
   main { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 16px 24px; }
   @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
   .sloupec { border-radius: 12px; padding: 12px; min-height: 200px; transition: outline .1s; }
-  .sloupec.cil { outline: 2px dashed var(--muted); }
   .zavazne { background: var(--red-bg); }
   .upravit { background: var(--orange-bg); }
   .hotovo  { background: var(--green-bg); }
   .sloupec h2 { margin: 0 0 10px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
   .zavazne h2 { color: var(--red); } .upravit h2 { color: var(--orange); } .hotovo h2 { color: var(--green); }
   .pocet { font-size: 13px; font-weight: 600; background: rgba(255,255,255,.7); border-radius: 99px; padding: 1px 9px; }
-  .box { background: var(--card); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,.08); cursor: grab; border-left: 4px solid; }
+  .box { background: var(--card); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,.08); border-left: 4px solid; }
   .zavazne .box { border-left-color: var(--red); } .upravit .box { border-left-color: var(--orange); } .hotovo .box { border-left-color: var(--green); }
   .box h3 { margin: 0 0 4px; font-size: 15px; }
   .box p { margin: 0 0 6px; white-space: pre-wrap; }
@@ -51,7 +50,6 @@
   #dlgFoto { padding: 0; background: transparent; width: auto; max-width: 95vw; }
   #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
   body.cteni .pridat, body.cteni .akce, body.cteni #btnStahnout { display: none; }
-  body.cteni .box { cursor: default; }
   .schranka { margin-top: 6px; font-size: 13px; }
   .dialog-tl { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 </style>
@@ -202,17 +200,13 @@ function vykresli() {
     p.className = 'pridat'; p.textContent = '+ Přidat';
     p.onclick = () => otevri(null, s.id);
     el.appendChild(p);
-    el.ondragover = e => { e.preventDefault(); el.classList.add('cil'); };
-    el.ondragleave = () => el.classList.remove('cil');
-    el.ondrop = e => { e.preventDefault(); presun(e.dataTransfer.getData('text'), s.id); };
     t.appendChild(el);
   }
 }
 
 function box(c) {
   const b = document.createElement('article');
-  b.className = 'box'; b.draggable = !!gh().token;
-  b.ondragstart = e => e.dataTransfer.setData('text', c.id);
+  b.className = 'box';
   const p = document.createElement('p'); p.className = 'text'; p.textContent = textChyby(c); b.appendChild(p);
   if (c.fotky?.length) {
     const f = document.createElement('div'); f.className = 'fotky';
