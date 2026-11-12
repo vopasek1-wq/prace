@@ -114,6 +114,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdn7i89",
+      "text": "Chyby se někdy objeví mimo obrazovku. Hláška „Vyberte jednu z možností“ u zdroje cen je pořád na samém spodním okraji okna. U neplatného e-mailu zůstala stránka dole a chyba byla nahoře mimo záběr.",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
