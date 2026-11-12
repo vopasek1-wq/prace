@@ -107,6 +107,13 @@
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
+    },
+    {
+      "id": "cmwdn2xga",
+      "text": "Záporný počet na detailu položku smaže. Měl jsem 25 ks, zadal jsem −5 a položka zmizela z košíku bez upozornění. \nŘešení at nejde napsat - (mínus) viz alza",
+      "stranka": "",
+      "sloupec": "upravit",
+      "fotky": []
     }
   ]
 }
