@@ -60,7 +60,8 @@
   #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
   body.cteni .pridat, body.cteni .akce, body.cteni #btnStahnout { display: none; }
   .schranka { margin-top: 6px; font-size: 13px; }
-  .box a { color: #1a5fb4; word-break: break-all; }
+  .box a, .odkazy a { color: #1a5fb4; word-break: break-all; }
+  .odkazy { font-size: 13px; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
   #hledat { flex: 1; min-width: 200px; max-width: 700px; margin: 0 16px; padding: 10px 12px; }
   .sbalit { border: none; background: rgba(255,255,255,.7); font-size: 12px; padding: 2px 8px; margin-left: auto; margin-right: 6px; }
   .sloupec h2 { gap: 6px; }
@@ -89,6 +90,7 @@
     <h2 id="dlgNadpis" style="margin:0">Nová chyba</h2>
     <label for="fText">Chyba</label>
     <textarea id="fText" placeholder="Napiš, co je špatně. Fotky vlož přímo sem (Ctrl+V)."></textarea>
+    <div class="odkazy" id="fOdkazy"></div>
     <label for="fFoto">Fotky</label>
     <div class="fotky" id="fFotky"></div>
     <input id="fFoto" type="file" accept="image/*" multiple>
@@ -357,15 +359,26 @@ for (const d of ['#dlgBox', '#dlgGithub']) {
   });
 }
 $('#hledat').oninput = () => vykresli();
+// odkazy z textu chyby jako klikací seznam pod polem
+function vykresliOdkazyForm() {
+  const f = $('#fOdkazy'); f.innerHTML = '';
+  const odkazy = [...new Set($('#fText').value.match(RE_ODKAZ) || [])];
+  for (const u of odkazy) {
+    const a = document.createElement('a'); a.href = u; a.textContent = '↗ ' + u; a.target = '_blank'; a.rel = 'noopener';
+    f.appendChild(a);
+  }
+}
+$('#fText').addEventListener('input', vykresliOdkazyForm);
 $('#dlgFoto').onclick = () => $('#dlgFoto').close();
 
 let fotkyPuvodni = [];
 
+const RE_ODKAZ = /https?:\/\/[^\s<>"“”„]+[^\s<>"“”„.,;:!?)\]]/g;
 const bezDiakritiky = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 // text s klikacími odkazy (bez innerHTML, ať text nemůže vložit HTML)
 function vlozTextSOdkazy(el, text) {
-  const re = /https?:\/\/[^\s<>"“”„]+[^\s<>"“”„.,;:!?)\]]/g;
+  const re = new RegExp(RE_ODKAZ.source, 'g');
   let i = 0, m;
   while ((m = re.exec(text))) {
     el.append(text.slice(i, m.index));
@@ -410,6 +423,7 @@ function otevri(c, sloupec) {
   fotkyForm = [...(c?.fotky || [])];
   fotkyPuvodni = [...fotkyForm];
   vykresliFotkyForm();
+  vykresliOdkazyForm();
   $('#dlgBox').returnValue = '';
   $('#dlgBox').showModal();
 }
