@@ -58,7 +58,7 @@
   .fotky-edit button { position: absolute; top: -6px; right: -6px; padding: 0 6px; font-size: 12px; border-radius: 99px; }
   #dlgFoto { padding: 0; background: transparent; width: auto; max-width: 95vw; }
   #dlgFoto img { display: block; max-width: 95vw; max-height: 90vh; border-radius: 8px; cursor: zoom-out; }
-  body.cteni .pridat, body.cteni .akce, body.cteni #btnStahnout { display: none; }
+  body.cteni .pridat, body.cteni .akce { display: none; }
   .schranka { margin-top: 6px; font-size: 13px; }
   .box a, .odkazy a { color: #1a5fb4; word-break: break-all; }
   .odkazy { font-size: 13px; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
@@ -82,7 +82,6 @@
   </div>
   <input id="hledat" type="search" placeholder="Hledat v chybách…">
   <div class="tlacitka">
-    <button id="btnStahnout" title="Stáhne chyby.json – nahraj ho do repozitáře do složky chyby/">Stáhnout JSON</button>
     <button id="btnGithub">Napojit GitHub</button>
   </div>
 </header>
@@ -181,6 +180,36 @@ async function nacti() {
 }
 
 let casovac = null;
+let rozpracovano = false; // čeká se na uložení – automatické obnovení počká
+
+// každou minutu načte změny z GitHubu (např. když Claude přesune chybu do Hotovo)
+const zaneprazdnen = () => rozpracovano || document.querySelector('dialog[open]') || document.hidden;
+async function obnov() {
+  if (zaneprazdnen()) return;
+  const { token, vetev } = gh();
+  try {
+    let nova, noveSha = null;
+    if (token) {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${CESTA}?ref=${encodeURIComponent(vetev)}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }, cache: 'no-store' });
+      if (!r.ok) return;
+      const j = await r.json();
+      if (j.sha === sha) return;
+      noveSha = j.sha; nova = JSON.parse(zB64(j.content));
+    } else {
+      const r = await fetch('chyby.json', { cache: 'no-store' });
+      if (!r.ok) return;
+      nova = await r.json();
+      if (JSON.stringify(nova) === JSON.stringify(data)) return;
+    }
+    if (zaneprazdnen() || !Array.isArray(nova.chyby)) return;
+    data = nova; if (noveSha) sha = noveSha;
+    vykresli();
+    stav('Načteny nové změny ' + new Date().toLocaleTimeString('cs-CZ'));
+  } catch {}
+}
+setInterval(obnov, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) obnov(); });
 // zápisy na GitHub jdou po jednom, jinak si commity do stejné větve překážejí
 let fronta = Promise.resolve();
 const vFronte = fn => (fronta = fronta.then(fn, fn));
@@ -190,7 +219,8 @@ function uloz() {
   if (!token) return;
   clearTimeout(casovac);
   stav('Ukládám…');
-  casovac = setTimeout(() => vFronte(ulozNaGithub), 600);
+  rozpracovano = true;
+  casovac = setTimeout(() => vFronte(async () => { await ulozNaGithub(); rozpracovano = false; }), 600);
 }
 
 async function ulozNaGithub() {
@@ -456,12 +486,6 @@ $('#dlgGithub').addEventListener('close', () => {
   if (v === 'odpojit') { ls.set('chyby_token', null); sha = null; nacti(); }
   if (v === 'ulozit') { ls.set('chyby_token', $('#gToken').value.trim() || null); ls.set('chyby_vetev', $('#gVetev').value.trim() || 'main'); nacti(); }
 });
-
-$('#btnStahnout').onclick = () => {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' }));
-  a.download = 'chyby.json'; a.click();
-};
 
 nacti();
 </script>
