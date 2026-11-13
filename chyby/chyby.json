@@ -77,7 +77,7 @@
     },
     {
       "id": "cmwdmd6iz",
-      "text": "V textech článků jsou dva odkazy na adresy, které už neexistují a web je přesměruje jinam:\n/podlazky-na-leseni → přesměruje na /lesenarske-podlazky. Odkaz je v článcích /fasadni-leseni a /jak-postavit-leseni.\n/prukaz-lesenare → přesměruje na /lesenarsky-prukaz. Odkaz je v /fasadni-leseni, /jak-postavit-leseni a /kolik-stoji-pujcit-leseni (možná i jinde, u každého cíle jsem si ukládal nejvýš tři zdrojové stránky).\nZákazník dojde, kam má, jen o zlomek sekundy později. Vyhledávače ale přímý odkaz hodnotí lépe než přesměrovaný. Oprava je přepsat v těch článcích odkaz na novou adresu. Je to kosmetika, nic naléhavého.",
+      "text": "Kolize s článkem: produkt „Lešenářský průkaz – školení“ má adresu /lesenarsky-prukaz-867, protože /lesenarsky-prukaz už patří článku (vrací 200).",
       "stranka": "",
       "sloupec": "upravit",
       "fotky": []
