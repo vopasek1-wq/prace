@@ -10,6 +10,8 @@ v prohlížeči, nic se neinstaluje a funguje i bez internetu (písmo Open Sans 
 * Kalkulačka rozloží kusy na co nejmenší počet trubek, seskupí stejné nářezy a ukáže pruh každé trubky v měřítku
   6000 mm (pravítko v metrech, polohy prořezů, odřezek šrafovaně) a přehled délek.
 * Barva kusu je v pruhu i v přehledu délek stejná. Barev je 20, u delšího seznamu se přidají odstíny.
+* Počet řezů na každou trubku a celkem: řezy mezi kusy a poslední řez, kterým se oddělí odřezek (trubka spotřebovaná
+  přesně bez zbytku ho nemá). Je i v kopii plánu, e-mailu a CSV.
 * Štítek „Nejmenší možný počet trubek (ověřeno)“ se ukáže, když řešič dokázal, že méně trubek být nemůže.
 * Pole **Materiál** odkazuje na stránku produktu na movitech.cz.
 * Zadání se pamatuje v prohlížeči. Výsledek jde zkopírovat, poslat e-mailem, stáhnout jako CSV, vytisknout nebo sdílet
