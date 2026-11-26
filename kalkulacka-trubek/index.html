@@ -89,7 +89,8 @@ h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 400; text-wrap
 .panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 2px; padding: 20px; display: grid; gap: 16px; }
 .panel h2 { font-size: 24px; line-height: 1.25; }
 .label { font-size: 14px; font-weight: 700; color: var(--ink); }
-.fields { display: grid; }
+.fields { display: grid; gap: 14px; }
+.units .choices span { min-height: 36px; }
 .seg-choice { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 8px; }
 .seg-choice legend { padding: 0; margin-bottom: 8px; }
 /* přepínač jako volba varianty na stránce produktu */
@@ -133,7 +134,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-soft); opacity: 1; 
   position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
   font: 400 13px var(--display); color: var(--ink-soft); pointer-events: none;
 }
-.unit::after { content: "mm"; }
+.unit::after { content: attr(data-u); }
 .cnt::after { content: "ks"; }
 
 button {
@@ -337,6 +338,13 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
             <label><input type="radio" name="mat" id="matAlu" value="Hliník"><span>Hliník</span></label>
           </div>
         </fieldset>
+        <fieldset class="seg-choice units">
+          <legend class="label">Jednotky délky</legend>
+          <div class="choices">
+            <label><input type="radio" name="unit" id="unitCm" value="cm"><span>cm</span></label>
+            <label><input type="radio" name="unit" id="unitMm" value="mm" checked><span>mm</span></label>
+          </div>
+        </fieldset>
       </div>
 
       <div class="pieces">
@@ -352,9 +360,9 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       <button type="submit" class="primary">Vypočítat</button>
 
       <div class="bulk">
-        <label class="label" for="bulk">Vložit seznam z textu <span class="h2-note" style="display:block;margin-top:2px">(délky zadávej vždy v milimetrech)</span></label>
+        <label class="label" for="bulk">Vložit seznam z textu <span class="h2-note" id="bulkUnitNote" style="display:block;margin-top:2px">(délky zadávej v milimetrech)</span></label>
         <textarea id="bulk" placeholder="10 × 3740&#10;12 × 2465&#10;23 × 860"></textarea>
-        <p class="hint">Na každý řádek počet kusů a délka, např. „10 × 3740“ nebo „10 3740“.</p>
+        <p class="hint" id="bulkHint">Na každý řádek počet kusů a délka, např. „10 × 3740“ nebo „10 3740“.</p>
         <div class="actions">
           <button type="button" id="bulkApply">Nahrát seznam</button>
         </div>
@@ -395,6 +403,14 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
   var rowsEl = document.getElementById("rows");
   var resultsEl = document.getElementById("results");
   var errorEl = document.getElementById("error");
+
+  // jednotka zadávání a zobrazení délek; uvnitř se vždy počítá v milimetrech
+  var unit = "mm";
+  function cm() { return unit === "cm"; }
+  function lenNum(mm) { return fmt(cm() ? mm / 10 : mm); }             // číslo bez jednotky
+  function lenTxt(mm) { return lenNum(mm) + " " + unit; }               // délka s jednotkou
+  function toInput(mm) { return mm === "" || mm == null || !isFinite(mm) ? "" : (cm() ? Math.round(mm) / 10 : mm); }
+  function fromInput(v) { return cm() ? Math.round(v * 100) / 10 : v; } // na desetiny milimetru
 
   function fmt(n) {
     var r = Math.round(n * 10) / 10;
@@ -437,7 +453,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       if (last && last.len === l) last.n++;
       else parts.push({ len: l, n: 1 });
     });
-    return parts.map(function (p) { return { len: p.len, text: p.n + " ks " + fmt(p.len) + " mm" }; });
+    return parts.map(function (p) { return { len: p.len, text: p.n + " ks " + lenTxt(p.len) }; });
   }
 
   // stejné délky sloučí: [548, 548, 440] → "2 ks 548 mm | 1 ks 440 mm"
@@ -448,7 +464,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       if (last && last.len === l) last.n++;
       else parts.push({ len: l, n: 1 });
     });
-    return parts.map(function (p) { return p.n + " ks " + fmt(p.len) + " mm"; }).join(" | ");
+    return parts.map(function (p) { return p.n + " ks " + lenTxt(p.len); }).join(" | ");
   }
 
   /* ---------- Rows ---------- */
@@ -456,11 +472,11 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     var row = el("div", "prow");
     var sw = el("span", "swatch");
     var lenWrap = el("span", "unit");
+    lenWrap.setAttribute("data-u", unit);
     var lenIn = el("input");
-    lenIn.type = "number"; lenIn.min = "1"; lenIn.step = "1"; lenIn.placeholder = "délka";
+    lenIn.type = "number"; lenIn.placeholder = "délka";
     lenIn.className = "len"; lenIn.value = len != null ? len : "";
-    lenIn.setAttribute("aria-label", "Délka trubky v mm");
-    lenIn.inputMode = "numeric";
+    lenAttrs(lenIn);
     lenWrap.appendChild(lenIn);
     var qtyWrap = el("span", "cnt");
     var qtyIn = el("input");
@@ -480,14 +496,22 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     recolor();
     return row;
   }
+  // vlastnosti pole délky podle jednotky
+  function lenAttrs(input) {
+    input.min = cm() ? "0.1" : "1"; input.step = cm() ? "0.1" : "1";
+    input.inputMode = cm() ? "decimal" : "numeric";
+    input.setAttribute("aria-label", "Délka trubky v " + (cm() ? "centimetrech" : "milimetrech"));
+  }
+  // řádky se předávají v milimetrech, do polí se zapíšou ve zvolené jednotce
   function setRows(list) {
     rowsEl.innerHTML = "";
-    list.forEach(function (p) { addRow(p[0], p[1]); });
+    list.forEach(function (p) { addRow(toInput(p[0]), p[1]); });
     if (!list.length) addRow();
   }
   function readRows() {
     return Array.prototype.map.call(rowsEl.children, function (r) {
-      return [parseFloat(r.querySelector(".len").value), parseInt(r.querySelector(".qty").value, 10)];
+      var v = parseFloat(r.querySelector(".len").value);
+      return [isFinite(v) ? fromInput(v) : v, parseInt(r.querySelector(".qty").value, 10)];
     });
   }
   function colorMap(lengths) {
@@ -727,10 +751,8 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       });
       count.append(lead);
       var rest = el("div", "kpi right");
-      rest.append(el("span", "lab", "Odřezek"), el("b", "val", fmt(g.rest) + " mm"));
-      var cutsK = el("div", "kpi right cuts-k");
-      cutsK.append(el("span", "lab", "Řezů na trubku"), el("b", "val", String(cutsOf(g))));
-      head.append(rest, cutsK, count);
+      rest.append(el("span", "lab", "Odřezek"), el("b", "val", lenTxt(g.rest)));
+      head.append(rest, count);
       body.append(head);
 
       var tube = el("div", "tube");
@@ -738,14 +760,14 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       labels.setAttribute("aria-hidden", "true");
       var bar = el("div", "bar");
       bar.setAttribute("role", "img");
-      bar.setAttribute("aria-label", piecesText(g.pieces) + ", " + cutsOf(g) + " " + cutsWord(cutsOf(g)) + ", odřezek " + fmt(g.rest) + " mm");
+      bar.setAttribute("aria-label", piecesText(g.pieces) + ", " + cutsOf(g) + " " + cutsWord(cutsOf(g)) + ", odřezek " + lenTxt(g.rest));
       var pos = 0; // mm od začátku trubky
       function cut() {
         var k = el("span", "kerf");
         k.style.flex = kerf + " 1 0";
-        k.title = "prořez " + fmt(kerf) + " mm";
+        k.title = "prořez " + lenTxt(kerf);
         bar.append(k);
-        var lb = el("span", "cutlabel", fmt(kerf) + " mm");
+        var lb = el("span", "cutlabel", lenTxt(kerf));
         lb.style.left = ((pos + kerf / 2) / stock * 100) + "%";
         labels.append(lb);
         pos += kerf;
@@ -756,8 +778,8 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
         s.style.flex = p + " 1 0";
         s.style.background = colors[p];
         s.style.color = textOn(colors[p]);
-        s.title = fmt(p) + " mm";
-        s.append(segLabel(fmt(p)));
+        s.title = lenTxt(p);
+        s.append(segLabel(lenNum(p)));
         bar.append(s);
         pos += p;
       });
@@ -765,7 +787,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       if (g.rest > 0) {
         var r = el("span", "seg rest-seg");
         r.style.flex = g.rest + " 1 0";
-        r.title = "odřezek " + fmt(g.rest) + " mm";
+        r.title = "odřezek " + lenTxt(g.rest);
         r.append(segLabel("odřezek"));
         bar.append(r);
       }
@@ -794,8 +816,8 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       var td = el("td", "mono");
       var sw = el("span", "sw");
       sw.style.background = colors[d.len];
-      td.append(sw, document.createTextNode(fmt(d.len) + " mm"));
-      tr.append(el("td", "mono c-qty", d.qty + " ks"), td, el("td", "n mono", fmt(d.len * d.qty) + " mm"));
+      td.append(sw, document.createTextNode(lenTxt(d.len)));
+      tr.append(el("td", "mono c-qty", d.qty + " ks"), td, el("td", "n mono", lenTxt(d.len * d.qty)));
       tb.append(tr);
     });
     table.append(tb);
@@ -806,7 +828,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     ltr.append(ltd);
     tf.append(ltr);
     var ftr = el("tr");
-    ftr.append(el("td", "mono c-qty", totalPieces + " ks"), el("td"), el("td", "n mono", fmt(totalLen) + " mm"));
+    ftr.append(el("td", "mono c-qty", totalPieces + " ks"), el("td"), el("td", "n mono", lenTxt(totalLen)));
     tf.append(ftr);
     table.append(tf);
     tw.append(table);
@@ -819,32 +841,32 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     // text plánu pro kopírování a e-mail
     function planLines() {
       var spec = document.getElementById("matAlu").checked ? "Hliníková trubka Ø 48,3 mm, tloušťka stěny 4,00 mm" : "Ocelová lešenářská trubka Ø 48,3 mm, tloušťka stěny 4,05 mm";
-      var lines = [spec, "Prořez " + fmt(kerf) + " mm, délka trubky " + fmt(stock) + " mm", ""];
+      var lines = [spec, "Prořez " + lenTxt(kerf) + ", délka trubky " + lenTxt(stock), ""];
       lines.push("Celkem je potřeba " + bars.length + " trubek.");
-      lines.push("Požadované kusy: " + totalPieces + " ks, počet řezů celkem: " + totalCuts + ", celkový zbytek materiálu: " + fmt(totalRest) + " mm", "");
+      lines.push("Požadované kusy: " + totalPieces + " ks, počet řezů celkem: " + totalCuts + ", celkový zbytek materiálu: " + lenTxt(totalRest), "");
       var f = 1;
       groups.forEach(function (g) {
         var t2 = f + g.count - 1;
         lines.push(g.count + "× " + (g.count === 1 ? "Trubka " + f : "Trubky " + f + "–" + t2) + ": " +
-          piecesText(g.pieces) + ", " + cutsOf(g) + " " + cutsWord(cutsOf(g)) + " na trubku, odřezek " + fmt(g.rest) + " mm");
+          piecesText(g.pieces) + ", " + cutsOf(g) + " " + cutsWord(cutsOf(g)) + " na trubku, odřezek " + lenTxt(g.rest));
         f = t2 + 1;
       });
       lines.push("", "Přehled délek:");
       demand.slice().sort(function (a, b) { return b.len - a.len; }).forEach(function (d) {
-        lines.push(d.qty + " × " + fmt(d.len) + " mm");
+        lines.push(d.qty + " × " + lenTxt(d.len));
       });
       return lines;
     }
     function csvText() {
       function cell(v) { v = String(v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
-      var rows = [["Trubky", "Počet trubek", "Nářezy", "Řezů na trubku", "Řezů celkem", "Odřezek (mm)"]];
+      var rows = [["Trubky", "Počet trubek", "Nářezy", "Řezů na trubku", "Řezů celkem", "Odřezek (" + unit + ")"]];
       var f = 1;
       groups.forEach(function (g) {
         var t2 = f + g.count - 1;
-        rows.push([g.count === 1 ? String(f) : f + "–" + t2, g.count, piecesText(g.pieces).replace(/\u00a0/g, ""), cutsOf(g), cutsOf(g) * g.count, g.rest]);
+        rows.push([g.count === 1 ? String(f) : f + "–" + t2, g.count, piecesText(g.pieces).replace(/\u00a0/g, ""), cutsOf(g), cutsOf(g) * g.count, lenNum(g.rest).replace(/\s/g, "")]);
         f = t2 + 1;
       });
-      rows.push(["Celkem", bars.length, "", "", totalCuts, totalRest]);
+      rows.push(["Celkem", bars.length, "", "", totalCuts, lenNum(totalRest).replace(/\s/g, "")]);
       return "\ufeff" + rows.map(function (r) { return r.map(cell).join(";"); }).join("\r\n");
     }
 
@@ -929,7 +951,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       var l = rows[i][0], q = rows[i][1];
       if (!isFinite(l) && !isFinite(q)) continue;
       if (!(l > 0) || !(q > 0)) return fail("Řádek " + (i + 1) + ": vyplň délku i počet kusů.");
-      if (l > stock) return fail("Kus " + fmt(l) + " mm je delší než trubka " + fmt(stock) + " mm.");
+      if (l > stock) return fail("Kus " + lenTxt(l) + " je delší než trubka " + lenTxt(stock) + ".");
       if (!(l in agg)) { agg[l] = 0; order.push(l); }
       agg[l] += q;
     }
@@ -967,10 +989,32 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     if (applyHash()) { save(); updateSubtitle(); if (calc() === true) revealResults(); }
   });
 
+  // přepnutí jednotky: hodnoty v polích se převedou, výsledek se přepočítá
+  function setUnit(u) {
+    var rows = readRows();
+    unit = u;
+    document.getElementById(u === "cm" ? "unitCm" : "unitMm").checked = true;
+    var filled = rows.some(function (r) { return isFinite(r[0]) || isFinite(r[1]); });
+    if (filled) setRows(rows.map(function (r) { return [isFinite(r[0]) ? r[0] : "", isFinite(r[1]) ? r[1] : ""]; }));
+    Array.prototype.forEach.call(rowsEl.querySelectorAll(".unit"), function (w) { w.setAttribute("data-u", unit); });
+    Array.prototype.forEach.call(rowsEl.querySelectorAll(".len"), lenAttrs);
+    document.getElementById("bulkUnitNote").textContent = "(délky zadávej v " + (cm() ? "centimetrech" : "milimetrech") + ")";
+    document.getElementById("bulk").placeholder = cm() ? "10 × 374\n12 × 246,5\n23 × 86" : "10 × 3740\n12 × 2465\n23 × 860";
+    document.getElementById("bulkHint").textContent = cm()
+      ? "Na každý řádek počet kusů a délka v centimetrech, např. „10 × 374“ nebo „10 374“."
+      : "Na každý řádek počet kusů a délka, např. „10 × 3740“ nebo „10 3740“.";
+    updateSubtitle();
+    if (document.getElementById("toprow").classList.contains("has-answer")) calc();
+  }
+  ["unitMm", "unitCm"].forEach(function (id) {
+    document.getElementById(id).addEventListener("change", function () { setUnit(id === "unitCm" ? "cm" : "mm"); save(); });
+  });
+
   function save() {
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({
         alu: document.getElementById("matAlu").checked,
+        unit: unit,
         rows: readRows()
       }));
     } catch (e) { /* úložiště nemusí být dostupné */ }
@@ -979,6 +1023,7 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
     if (applyHash()) return true;
     try {
       var d = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+      if (d && d.unit === "cm") setUnit("cm");
       if (d && d.rows && d.rows.length) {
         document.getElementById(d.alu ? "matAlu" : "matSteel").checked = true;
         setRows(d.rows.map(function (r) { return [isFinite(r[0]) ? r[0] : "", isFinite(r[1]) ? r[1] : ""]; }));
@@ -994,7 +1039,8 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
   });
   function matDesc() {
     var druh = document.getElementById("matAlu").checked ? "Hliníkové" : "Ocelové lešenářské";
-    return druh + " trubky řežeme z originální délky " + fmt(STOCK).replace(/\s/g, "") + "\u00a0mm s ohledem na minimální prořez a odpad. Prořez činí " + fmt(KERF) + "\u00a0mm, tolerance ±5\u00a0mm.";
+    var nb = "\u00a0" + unit;
+    return druh + " trubky řežeme z originální délky " + lenNum(STOCK).replace(/\s/g, "") + nb + " s ohledem na minimální prořez a odpad. Prořez činí " + lenNum(KERF) + nb + ", tolerance ±" + lenNum(5) + nb + ".";
   }
   // záhlaví: popis, parametry a průřez trubky podle zvoleného materiálu
   function updateSubtitle() {
@@ -1028,8 +1074,13 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
       var m = line.replace(",", ".").match(/(\d+(?:\.\d+)?)\D+(\d+(?:\.\d+)?)/);
       if (!m) return;
       // větší číslo je délka, menší počet kusů (pořadí na řádku nevadí)
+      // v cm platí pořadí „počet × délka“; celé číslo vedle desetinného je počet kusů
       var a = parseFloat(m[1]), b = parseFloat(m[2]);
-      list.push([Math.max(a, b), Math.round(Math.min(a, b))]);
+      var len, qty;
+      if (Number.isInteger(a) !== Number.isInteger(b)) { len = Number.isInteger(a) ? b : a; qty = Number.isInteger(a) ? a : b; }
+      else if (cm()) { qty = a; len = b; }
+      else { len = Math.max(a, b); qty = Math.min(a, b); }
+      list.push([fromInput(len), Math.round(qty)]);
     });
     if (!list.length) { errorEl.textContent = "V textu jsem nenašel žádnou dvojici délka + počet."; errorEl.hidden = false; return; }
     setRows(list); save();
