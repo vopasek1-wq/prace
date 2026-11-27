@@ -15,6 +15,8 @@ v prohlížeči, nic se neinstaluje a funguje i bez internetu (písmo Open Sans 
 * Přepínač **Jednotky délky** (mm / cm): délky se zadávají i zobrazují ve zvolené jednotce, už zadané hodnoty se
   převedou. Počítá se vždy v milimetrech, odkaz pro sdílení je také v milimetrech. Volba se pamatuje v prohlížeči.
 * Štítek „Nejmenší možný počet trubek (ověřeno)“ se ukáže, když řešič dokázal, že méně trubek být nemůže.
+* Tlačítko **Vytisknout zadání** na konci levého panelu vytiskne jen zadání (materiál, jednotky a vyplněné
+  délky) bez nadpisu, výkresu a výsledků. Tlačítko **Vytisknout** u výsledků tiskne plán řezání.
 * Pole **Materiál** odkazuje na stránku produktu na movitech.cz.
 * Zadání se pamatuje v prohlížeči. Výsledek jde zkopírovat, poslat e-mailem, stáhnout jako CSV, vytisknout nebo sdílet
   odkazem se zadáním (`#ocel-3740x10-2465x12`, desetinná tečka je `p`). Tisk, CSV, odkaz a e-mail jsou jen ve
