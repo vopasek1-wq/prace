@@ -286,7 +286,16 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
   .pat, .overview { margin-bottom: 10px; }
   #form, .out-actions, .empty button { display: none !important; }
   .pat, .toprow, .overview { break-inside: avoid; }
+  /* tisk zadání: jen levý panel bez nadpisu, výkresu a ovládacích prvků */
+  body.printing-form .masthead, body.printing-form .right { display: none !important; }
+  body.printing-form .workspace { margin-top: 0; }
+  body.printing-form #form h2 { margin-bottom: 14px; }
+  body.printing-form #form { display: block !important; max-width: 420px; border: 0; background: none; padding: 0; }
+  body.printing-form #form button, body.printing-form #form .actions, body.printing-form #form .bulk,
+  body.printing-form #form .error, body.printing-form #form .print-form, body.printing-form .prow.blank { display: none !important; }
 }
+.print-form { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.print-form button { width: 100%; min-height: 44px; }
 </style>
 </head>
 <body>
@@ -366,6 +375,10 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
         <div class="actions">
           <button type="button" id="bulkApply">Nahrát seznam</button>
         </div>
+      </div>
+
+      <div class="print-form">
+        <button type="button" id="printForm">Vytisknout zadání</button>
       </div>
     </form>
 
@@ -1009,6 +1022,26 @@ tfoot .sum-label td { padding-bottom: 0; font: 400 13px var(--display); color: v
   ["unitMm", "unitCm"].forEach(function (id) {
     document.getElementById(id).addEventListener("change", function () { setUnit(id === "unitCm" ? "cm" : "mm"); save(); });
   });
+
+  // tisk zadání (levý panel); prázdné řádky se netisknou
+  (function () {
+    var b = document.getElementById("printForm");
+    var embedded = false;
+    try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+    if (embedded) { b.parentNode.hidden = true; return; }
+    function done() {
+      document.body.classList.remove("printing-form");
+      Array.prototype.forEach.call(rowsEl.children, function (r) { r.classList.remove("blank"); });
+    }
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(rowsEl.children, function (r) {
+        if (!r.querySelector(".len").value && !r.querySelector(".qty").value) r.classList.add("blank");
+      });
+      document.body.classList.add("printing-form");
+      window.addEventListener("afterprint", done, { once: true });
+      window.print();
+    });
+  })();
 
   function save() {
     try {
